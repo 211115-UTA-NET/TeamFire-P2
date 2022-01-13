@@ -1,5 +1,8 @@
 # TeamFire-P2
-Team members: Kareem, Ben, Jing
+- Team members: 
+    - Kareem Daley 
+    - Ben Herbert
+    - JingJing Zhuang
 
 # Project 2 Requirements
 Nov 15 2021 Arlington .NET / Richard Hawkins, Nick Escalona
