@@ -3,6 +3,8 @@
     - Kareem Daley 
     - Ben Herbert
     - JingJing Zhuang
+# Project Board
+- https://github.com/orgs/211115-UTA-NET/projects/2
 
 # Project 2 Requirements
 Nov 15 2021 Arlington .NET / Richard Hawkins, Nick Escalona
