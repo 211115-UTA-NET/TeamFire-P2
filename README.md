@@ -1,5 +1,5 @@
 # TeamFire-P2
-- Team members: 
+- Team Members: 
     - Kareem Daley 
     - Ben Herbert
     - JingJing Zhuang
