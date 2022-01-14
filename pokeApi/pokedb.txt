@@ -4,6 +4,7 @@ GO
 USE [PokeApp];
 GO
 
+
 CREATE SCHEMA poke;
 GO
 -- DROP SCHEMA shop
