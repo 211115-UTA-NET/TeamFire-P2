@@ -1,0 +1,54 @@
+﻿CREATE DATABASE [PokeApp];
+GO
+
+USE [PokeApp];
+GO
+
+CREATE SCHEMA poke;
+GO
+-- DROP SCHEMA shop
+-- DROP TABLE poke.Users;
+-- DROP TABLE poke.Cards;
+-- DROP TABLE poke.Dex;
+-- DROP TABLE poke.Active;
+-- DROP TABLE poke.Completed;
+
+CREATE TABLE poke.Users (
+    userID INT NOT NULL IDENTITY,
+    userName NVARCHAR(255) NOT NULL UNIQUE,
+    PRIMARY KEY (userName)
+);
+
+CREATE TABLE poke.Cards(
+    cardID INT NOT NULL IDENTITY ,
+    pokemon NVARCHAR(255) NOT NULL,
+    cardOwner NVARCHAR(255) NOT NULL,
+    trading BIT DEFAULT 0 ,
+    PRIMARY KEY (cardID)
+);
+
+CREATE TABLE poke.Dex(
+    pokeID INT NOT NULL,
+    pokemon NVARCHAR(255) NOT NULL,
+    PRIMARY KEY (pokemon)
+);
+
+CREATE TABLE poke.CompletedTrades (
+    tradeID INT NOT NULL IDENTITY,
+    pokemon NVARCHAR(255) NOT NULL,
+    offeredBy NVARCHAR(255) NOT NULL,
+    redeemedBy NVARCHAR(255) NOT NULL,
+    Timestamp DATETIMEOFFSET NOT NULL DEFAULT (SYSDATETIMEOFFSET()),
+    PRIMARY KEY (tradeID),
+    FOREIGN KEY (pokemon) REFERENCES poke.Dex(pokemon),
+    FOREIGN KEY (offeredBy) REFERENCES poke.Users(userName),
+    FOREIGN KEY (redeemedBy) REFERENCES poke.Users(userName),
+);
+
+
+-- Dummy Data  ----------------------------------
+INSERT INTO poke.dex (pokeID, pokemon)
+values (1, 'Bulbasaur'), (2, 'Ivysaur'), (3, 'Venusaur'),
+        (4,'Charmander'), (5,'Charmeleon'), (6,'Charizard'),
+        (7,'Squirtle'), (8,'Wartortle' ), (9,'Blastoise');
+SELECT * FROM poke.Dex
