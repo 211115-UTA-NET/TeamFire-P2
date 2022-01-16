@@ -21,75 +21,16 @@ namespace pokeApi.Data
         }
 
         //============== Get User===========//
-        //public async Task<IEnumerable<User>> GetUsersAsync(string name)
-        //{
-        //    List<User> result = new List<User>();
-
-        //    using SqlConnection connection = new(_connectionString);
-        //    connection.Open();
-
-        //    using SqlCommand cmd = new(
-        //                @"SELECT * FROM shop.Users WHERE userName=@sortName;",
-        //        connection);
-
-        //    cmd.Parameters.AddWithValue("@sortName", name);
-
-        //    using SqlDataReader reader = cmd.ExecuteReader();
-
-        //    // get trx from db
-        //    while (reader.Read())
-        //    {
-        //        string Name = reader["userName"].ToString();
-        //        string ID = reader["userID"].ToString();
-        //        result.Add(new(Name, ID));
-        //        Console.WriteLine($"{Name}'s userID: {ID}");
-
-        //    }
-
-        //    return result;
-        //}
-
-        public async Task<IEnumerable<dtoUser>> AddNewUserAsync(string user)
+        public async Task<IEnumerable<dtoUser>> GetUsersAsync(string name)
         {
             List<dtoUser> result = new List<dtoUser>();
-            using SqlConnection connection = new(_connectionString);
-            connection.Open();
-            string cmdText = @"INSERT INTO poke.Users (userName)
-                                SELECT * FROM(SELECT (@thisName) AS userName) AS temp
-                                WHERE NOT EXISTS (Select *from poke.Users where userName = (@thisName));
-                                SELECT * FROM poke.Users
-                                WHERE userName=@thisName;";
-            using SqlCommand cmd = new(cmdText, connection);
-            cmd.Parameters.AddWithValue("@thisName", user);
-
-            using SqlDataReader reader = cmd.ExecuteReader();
-
-
-            while (reader.Read())
-            {
-                string userName = reader["userName"].ToString();
-                string userID = reader["userID"].ToString();
-                result.Add(new(userName, userID));
-                Console.WriteLine($"{userName}'s userID: {userID}");
-
-            }
-
-            return result;
-        }
-
-        //================= GET CARDS =========================//
-        public async Task<IEnumerable<dtoCard>> GetCardsAsync(string name)
-        {
-            List<dtoCard> result = new List<dtoCard>();
 
             using SqlConnection connection = new(_connectionString);
             connection.Open();
 
             using SqlCommand cmd = new(
-                        @"SELECT * FROM poke.Cards
-                          WHERE cardOwner = @sortName;",
-
-            connection);
+                        @"SELECT * FROM poke.Users WHERE userName=@sortName;",
+                connection);
 
             cmd.Parameters.AddWithValue("@sortName", name);
 
@@ -98,20 +39,93 @@ namespace pokeApi.Data
             // get trx from db
             while (reader.Read())
             {
-                string cardID = reader["cardID"].ToString();
-                string pokemon = reader["pokemon"].ToString();
-                string cardOwner = reader["cardOwner"].ToString();
-                bool trading = (bool)reader["trading"];
-                result.Add(new(cardID, pokemon, cardOwner, trading));
-                Console.WriteLine($"{pokemon} number: {cardID} is owned by {cardOwner}.\nTrade being offered: {trading}");
+                int ID = (int)reader["userID"];
+                string Name = reader["userName"].ToString();
+                string pw = reader["password"].ToString();
+                string email = reader["email"].ToString();
+
+                result.Add(new( ID, Name, pw, email));
+                Console.WriteLine($"{Name}'s userID: {ID}");
 
             }
 
             return result;
         }
 
-        //================== SET INVENTORY ======//
-        public async Task<IEnumerable<dtoCard>> UpdateInventoryAsync(string newOwner, int cardUPC)
+        public async Task<IEnumerable<dtoUser>> AddNewUserAsync(string name, string pw, string Email)
+        {
+            List<dtoUser> result = new List<dtoUser>();
+            using SqlConnection connection = new(_connectionString);
+            connection.Open();
+            string cmdText = @"INSERT INTO poke.Users (userName, password, email)
+            SELECT * FROM(SELECT (@thisName) AS userName, (@thispw) as password, (@thisemail) as email) AS temp
+            WHERE NOT EXISTS (Select *from poke.Users where userName = (@thisName));
+                                SELECT * FROM poke.Users
+                                WHERE userName=@thisName;";
+            using SqlCommand cmd = new(cmdText, connection);
+            cmd.Parameters.AddWithValue("@thisName", name);
+            cmd.Parameters.AddWithValue("@thispw", pw);
+            cmd.Parameters.AddWithValue("@thisemail", Email);
+
+
+            using SqlDataReader reader = cmd.ExecuteReader();
+
+
+            while (reader.Read())
+            {
+                int userID = (int)reader["userID"];
+                string userName = reader["userName"].ToString();
+                string password = reader["password"].ToString();
+                string email = reader["email"].ToString();
+
+                result.Add(new(userID, userName, password, email));
+                Console.WriteLine($"{userName}'s userID: {userID}");
+
+            }
+
+            return result;
+        }
+
+        //================= GET CARDS =========================//
+        public async Task<IEnumerable<dtoCard>> GetCardsAsync(int userId)
+        {
+            List<dtoCard> result = new List<dtoCard>();
+
+            using SqlConnection connection = new(_connectionString);
+            connection.Open();
+
+            using SqlCommand cmd = new(
+                        @"SELECT cardID,poke.Cards.userID,userName,poke.Cards.pokeID,pokemon,trading
+                        From poke.Cards 
+                        INNER JOIN poke.Dex ON poke.Cards.pokeID = poke.Dex.pokeID
+                        INNER JOIN poke.Users On poke.Cards.userID = poke.Users.userID
+                        WHERE poke.Cards.userID = @sortID;",
+
+            connection);
+
+            cmd.Parameters.AddWithValue("@sortID", userId);
+
+            using SqlDataReader reader = cmd.ExecuteReader();
+
+            // get trx from db
+            while (reader.Read())
+            {
+                int cardID = (int)reader["cardID"];
+                int userID = (int)reader["userID"];
+                string userName = reader["userName"].ToString();
+                int pokeID = (int)reader["pokeID"];
+                string pokemon = reader["pokemon"].ToString();
+                int trading = (int)reader["trading"];
+                result.Add(new(cardID, userID, userName, pokeID, pokemon, trading));
+                Console.WriteLine($"{pokemon} number: {cardID} is owned by {userName}.\nTrade being offered: {trading}");
+
+            }
+
+            return result;
+        }
+
+        //================== UPDATE CARD OWNER ======//
+        public async Task<IEnumerable<dtoCard>> UpdateCardOwnerAsync(int newOwner, int cardId)
         {
             List<dtoCard> result = new List<dtoCard>();
 
@@ -119,32 +133,38 @@ namespace pokeApi.Data
             connection.Open();
 
             string cmdText = @"UPDATE poke.Cards 
-                            SET cardOwner = @newOwner 
-                            WHERE cardID = @cardUPC;
+                            SET userID = @newOwner 
+                            WHERE cardID = @cardID;
 
                             UPDATE poke.Cards 
-                            SET trading = @isTrading 
-                            WHERE cardID = @cardUPC;
+                            SET trading = 0 
+                            WHERE cardID = @cardID;
 
-                            SELECT * FROM poke.Cards
-                            WHERE cardOwner=@newOwner;";
+                            SELECT cardID, poke.Cards.userID,userName,poke.Cards.pokeID,pokemon,trading
+                         From poke.Cards
+                         INNER JOIN poke.Dex ON poke.Cards.pokeID = poke.Dex.pokeID
+                        INNER JOIN poke.Users On poke.Cards.userID = poke.Users.userID
+                        WHERE poke.Cards.userID = @newOwner AND poke.Cards.cardID = @cardID;
+                        ";
             using SqlCommand cmd = new(cmdText, connection);
 
             // ado.net requires you to use DBNull instead of null when you mean a SQL NULL value
             cmd.Parameters.AddWithValue("@newOwner", newOwner);
-            cmd.Parameters.AddWithValue("@cardUPC", cardUPC);
+            cmd.Parameters.AddWithValue("@cardID", cardId);
 
             using SqlDataReader reader = cmd.ExecuteReader();
 
             // get trx from db
             while (reader.Read())
             {
-                string cardID = reader["cardID"].ToString();
+                int cardID = (int)reader["cardID"];
+                int userID = (int)reader["userID"];
+                string userName = reader["userName"].ToString();
+                int pokeID = (int)reader["pokeID"];
                 string pokemon = reader["pokemon"].ToString();
-                string cardOwner = reader["cardOwner"].ToString();
-                bool trading = (bool)reader["trading"];
-                result.Add(new(cardID, pokemon, cardOwner, trading));
-                Console.WriteLine($"{pokemon} number: {cardID} is owned by {cardOwner}.\nTrade being offered: {trading}");
+                int trading = (int)reader["trading"];
+                result.Add(new(cardID, userID, userName, pokeID, pokemon, trading));
+                Console.WriteLine($"{pokemon} number: {cardID} is owned by {userName}.\nTrade being offered: {trading}");
 
             }
 
@@ -155,85 +175,85 @@ namespace pokeApi.Data
 
 
         //================= GET TRADES ========//
-        public async Task<IEnumerable<dtoTrade>> GetTradesDetailsAsync(string name)
-        {
-            List<dtoTrade> result = new List<dtoTrade>();
+        //public async Task<IEnumerable<dtoTradeRecord>> GetTradesDetailsAsync(int userId)
+        //{
+        //    List<dtoTradeRecord> result = new List<dtoTradeRecord>();
 
-            using SqlConnection connection = new(_connectionString);
-            connection.Open();
+        //    using SqlConnection connection = new(_connectionString);
+        //    connection.Open();
 
-            using SqlCommand cmd = new(
-                        @"SELECT * FROM poke.Trades
-                        WHERE offeredBy = @sortName
-                        OR redeemedBy = @sortName;",
-                connection);
+        //    using SqlCommand cmd = new(
+        //                @"SELECT * FROM poke.Trades
+        //                WHERE offeredBy = @sortName
+        //                OR redeemedBy = @sortName;",
+        //        connection);
 
-            cmd.Parameters.AddWithValue("@sortName", name);
+        //    cmd.Parameters.AddWithValue("@sortName", userId);
 
-            using SqlDataReader reader = cmd.ExecuteReader();
+        //    using SqlDataReader reader = cmd.ExecuteReader();
 
-            // get trx from db
-            while (reader.Read())
-            {
-                int tradeID = (int)reader["tradeID"];
-                string cardID = reader["cardID"].ToString();
-                string pokemon = reader["pokemon"].ToString();
-                string offeredBy = reader["offeredBy"].ToString();
-                string redeemedBy = reader["redeemedBy"].ToString();
-                result.Add(new(tradeID, cardID, pokemon, offeredBy, redeemedBy));
-                Console.WriteLine($"Trade id: {tradeID} - {pokemon}/{cardID}\nTraded to {redeemedBy} by {offeredBy}.");
-
-
-            }
-
-            return result;
-        }
-
-        //==================POST TRADE=======// --needs to be corrected b/c there could be multiple trades w/ same card number -should just use timestamp for re-selection
-        public async Task<IEnumerable<dtoTrade>> AddNewTradesAsync(string cardId, string pokemonName, string seller, string buyer)
-        {
-            List<dtoTrade> result = new List<dtoTrade>();
-            using SqlConnection connection = new(_connectionString);
-            connection.Open();
-
-            // assume the order exist already in the DB
-            string cmdText = @"INSERT INTO poke.Trades ( cardID, pokemon, offeredBy, redeemedBy)
-                               VALUES (  @thisID, @thisPokemon, @thisSeller , @thisBuyer);
-
-                                SELECT * FROM poke.Trades
-                                WHERE cardID = @thisID";
-            using SqlCommand cmd = new(cmdText, connection);
-
-            // ado.net requires you to use DBNull instead of null when you mean a SQL NULL value
-            cmd.Parameters.AddWithValue("@thisID", cardId);
-            cmd.Parameters.AddWithValue("@thisPokemon", pokemonName);
-            cmd.Parameters.AddWithValue("@thisSeller", seller);
-            cmd.Parameters.AddWithValue("@thisBuyer", buyer);
-            //cmd.ExecuteNonQuery();
-            //connection.Close();
-
-            using SqlDataReader reader = cmd.ExecuteReader();
-
-            // get trx from db
-            while (reader.Read())
-            {
-                int tradeID = (int)reader["tradeID"];
-                string cardID = reader["cardID"].ToString();
-                string pokemon = reader["pokemon"].ToString();
-                string offeredBy = reader["offeredBy"].ToString();
-                string redeemedBy = reader["redeemedBy"].ToString();
-                result.Add(new(tradeID, cardID, pokemon, offeredBy, redeemedBy));
-                Console.WriteLine($"Trade id: {tradeID} - {pokemon}/{cardID}\nTraded to {redeemedBy} by {offeredBy}.");
+        //    // get trx from db
+        //    while (reader.Read())
+        //    {
+        //        int tradeID = (int)reader["tradeID"];
+        //        string cardID = reader["cardID"].ToString();
+        //        string pokemon = reader["pokemon"].ToString();
+        //        string offeredBy = reader["offeredBy"].ToString();
+        //        string redeemedBy = reader["redeemedBy"].ToString();
+        //        result.Add(new(tradeID, cardID, pokemon, offeredBy, redeemedBy));
+        //        Console.WriteLine($"Trade id: {tradeID} - {pokemon}/{cardID}\nTraded to {redeemedBy} by {offeredBy}.");
 
 
-            }
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        
+        ////==================POST TRADE=======// --needs to be corrected b/c there could be multiple trades w/ same card number -should just use timestamp for re-selection
+        //public async Task<IEnumerable<dtoTrade>> AddNewTradesAsync(string cardId, string pokemonName, string seller, string buyer)
+        //{
+        //    List<dtoTrade> result = new List<dtoTrade>();
+        //    using SqlConnection connection = new(_connectionString);
+        //    connection.Open();
 
-        
+        //    // assume the order exist already in the DB
+        //    string cmdText = @"INSERT INTO poke.Trades ( cardID, pokemon, offeredBy, redeemedBy)
+        //                       VALUES (  @thisID, @thisPokemon, @thisSeller , @thisBuyer);
+
+        //                        SELECT * FROM poke.Trades
+        //                        WHERE cardID = @thisID";
+        //    using SqlCommand cmd = new(cmdText, connection);
+
+        //    // ado.net requires you to use DBNull instead of null when you mean a SQL NULL value
+        //    cmd.Parameters.AddWithValue("@thisID", cardId);
+        //    cmd.Parameters.AddWithValue("@thisPokemon", pokemonName);
+        //    cmd.Parameters.AddWithValue("@thisSeller", seller);
+        //    cmd.Parameters.AddWithValue("@thisBuyer", buyer);
+        //    //cmd.ExecuteNonQuery();
+        //    //connection.Close();
+
+        //    using SqlDataReader reader = cmd.ExecuteReader();
+
+        //    // get trx from db
+        //    while (reader.Read())
+        //    {
+        //        int tradeID = (int)reader["tradeID"];
+        //        string cardID = reader["cardID"].ToString();
+        //        string pokemon = reader["pokemon"].ToString();
+        //        string offeredBy = reader["offeredBy"].ToString();
+        //        string redeemedBy = reader["redeemedBy"].ToString();
+        //        result.Add(new(tradeID, cardID, pokemon, offeredBy, redeemedBy));
+        //        Console.WriteLine($"Trade id: {tradeID} - {pokemon}/{cardID}\nTraded to {redeemedBy} by {offeredBy}.");
+
+
+        //    }
+
+        //    return result;
+        //}
+
+
+
+
 
     }
 }

@@ -19,21 +19,21 @@ namespace pokeApi.Controllers
         {
             _repository = repository;
         }
-
+        //============ GET ===============//
         [HttpGet]
         public async Task<IActionResult> GetAllByNameAsync(
             [FromQuery] string name
             )
         {
-            IEnumerable<dtoUser> Users = await _repository.AddNewUserAsync(name);
+            IEnumerable<dtoUser> Users = await _repository.GetUsersAsync(name);
             return new JsonResult(Users);
         }
 
         //==============POST==============//
         [HttpPost]
-        public async Task<IActionResult> AddNewUserAsync([FromQuery] string name)
+        public async Task<IActionResult> AddNewUserAsync([FromQuery] string name, string pw, string email)
         {
-            IEnumerable<dtoUser> Users = await _repository.AddNewUserAsync(name);
+            IEnumerable<dtoUser> Users = await _repository.AddNewUserAsync(name, pw, email);
             return new JsonResult(Users);
         }
 

@@ -1,0 +1,1 @@
+﻿Server=tcp:p2-sql-teamfire.database.windows.net,1433;Initial Catalog=P2-SQL-TeamFire;Persist Security Info=False;User ID=SQLDBADMIN;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;

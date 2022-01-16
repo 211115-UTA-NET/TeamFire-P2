@@ -1,50 +1,59 @@
-﻿CREATE DATABASE [PokeApp];
-GO
-
-USE [PokeApp];
-GO
-
-
+﻿
+   
 CREATE SCHEMA poke;
 GO
--- DROP SCHEMA shop
--- DROP TABLE poke.Users;
--- DROP TABLE poke.Cards;
--- DROP TABLE poke.Dex;
--- DROP TABLE poke.Active;
--- DROP TABLE poke.Completed;
 
 CREATE TABLE poke.Users (
-    userID INT NOT NULL IDENTITY,
+    userID INT NOT NULL IDENTITY PRIMARY KEY,
     userName NVARCHAR(255) NOT NULL UNIQUE,
-    PRIMARY KEY (userName)
+	password NVARCHAR(255) NOT NULL,
+	email NVARCHAR(255) NOT NULL,
+);
+
+
+CREATE TABLE poke.Dex(
+    pokeID INT NOT NULL PRIMARY KEY,
+    pokemon NVARCHAR(255) NOT NULL,
 );
 
 CREATE TABLE poke.Cards(
-    cardID INT NOT NULL IDENTITY ,
-    pokemon NVARCHAR(255) NOT NULL,
-    cardOwner NVARCHAR(255) NOT NULL,
-    trading BIT DEFAULT 0 ,
-    PRIMARY KEY (cardID)
-);
-
-CREATE TABLE poke.Dex(
-    pokeID INT NOT NULL,
-    pokemon NVARCHAR(255) NOT NULL,
-    PRIMARY KEY (pokemon)
+    cardID INT NOT NULL IDENTITY PRIMARY KEY,
+    userID INT NOT NULL,
+	pokeID INT NOT NULL,
+    trading int DEFAULT 0,
 );
 
 CREATE TABLE poke.CompletedTrades (
-    tradeID INT NOT NULL IDENTITY,
-    pokemon NVARCHAR(255) NOT NULL,
-    offeredBy NVARCHAR(255) NOT NULL,
-    redeemedBy NVARCHAR(255) NOT NULL,
+    tradeID INT NOT NULL IDENTITY PRIMARY KEY,
+    offeredBy INT NOT NULL,
+    redeemedBy INT NOT NULL,
     Timestamp DATETIMEOFFSET NOT NULL DEFAULT (SYSDATETIMEOFFSET()),
-    PRIMARY KEY (tradeID),
-    FOREIGN KEY (pokemon) REFERENCES poke.Dex(pokemon),
-    FOREIGN KEY (offeredBy) REFERENCES poke.Users(userName),
-    FOREIGN KEY (redeemedBy) REFERENCES poke.Users(userName),
 );
+
+CREATE TABLE poke.TradeDetail(
+	ID INT NOT NULL IDENTITY PRIMARY KEY,
+	tradeID INT NOT NULL,
+	cardID INT NOT NULL,
+	userID INT NOT NULL
+)
+
+ALTER TABLE poke.Cards ADD CONSTRAINT FK_User_ID 
+    FOREIGN KEY (userID) REFERENCES poke.Users(userID);
+
+ALTER TABLE poke.Cards ADD CONSTRAINT FK_Poke_ID 
+    FOREIGN KEY (pokeID) REFERENCES poke.Dex(pokeID);
+
+ALTER TABLE poke.CompletedTrades ADD CONSTRAINT FK_offeredBy_User_ID 
+    FOREIGN KEY (offeredBy) REFERENCES poke.Users(userID);
+
+ALTER TABLE poke.CompletedTrades ADD CONSTRAINT FK_redeemedBy_User_ID 
+    FOREIGN KEY (redeemedBy) REFERENCES poke.Users(userID);
+
+ALTER TABLE poke.TradeDetail ADD CONSTRAINT FK_trade_ID 
+    FOREIGN KEY (tradeID) REFERENCES poke.CompletedTrades(tradeID);
+
+ALTER TABLE poke.TradeDetail ADD CONSTRAINT FK_card_ID 
+    FOREIGN KEY (cardID) REFERENCES poke.Cards(cardID);
 
 
 -- Dummy Data  ----------------------------------

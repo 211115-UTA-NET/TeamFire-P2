@@ -4,18 +4,22 @@ namespace pokeApi.Models
 	public class dtoCard
 	{
 
-		public string cardID { get; set; }
-		public string pokemon { get; set; }
-		public string cardOwner { get; set; }
-		public bool trading { get; set; }
+		public int cardID { get; set; }
+		public int userID { get; set; }
+        public string userName { get; set; }
+        public int pokeID { get; set; }
+        public string pokemon { get; set; }
+		public int trading { get; set; }
 
-        public dtoCard(string cardID, string pokemon, string cardOwner, bool trading)
+        public dtoCard(int cardID, int userID, string userName, int pokeID, string pokemon, int trading)
         {
             this.cardID = cardID;
+            this.userID = userID;
+            this.userName = userName;
+            this.pokeID = pokeID;
             this.pokemon = pokemon;
-            this.cardOwner = cardOwner;
             this.trading = trading;
         }
-	}
+    }
 }
 

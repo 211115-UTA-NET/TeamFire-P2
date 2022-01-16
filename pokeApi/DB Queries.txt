@@ -1,0 +1,57 @@
+﻿INSERT INTO poke.dex (pokeID, pokemon)
+values (1, 'Bulbasaur'), (2, 'Ivysaur'), (3, 'Venusaur'),
+        (4,'Charmander'), (5,'Charmeleon'), (6,'Charizard'),
+        (7,'Squirtle'), (8,'Wartortle' ), (9,'Blastoise');
+SELECT * FROM poke.Users
+SELECT * FROM poke.Dex
+SELECT * FROM poke.Cards
+SELECT * FROM poke.CompletedTrades
+SELECT * FROM poke.TradeDetail
+
+
+INSERT INTO poke.dex (pokeID, pokemon)
+values (1, 'Bulbasaur'), (2, 'Ivysaur'), (3, 'Venusaur'),
+        (4,'Charmander'), (5,'Charmeleon'), (6,'Charizard'),
+        (7,'Squirtle'), (8,'Wartortle' ), (9,'Blastoise');
+SELECT * FROM poke.Users;
+SELECT * FROM poke.Dex where pokeID = 1;
+SELECT * FROM poke.Cards;
+SELECT * FROM poke.CompletedTrades;
+SELECT * FROM poke.TradeDetail;
+
+INSERT INTO poke.Users (userName, [password], email)
+VALUES ('test', 'test', 'test');
+
+INSERT INTO poke.Cards ( userID, pokeID, trading)
+VALUES (1, 1, 0);
+
+DELETE  FROM poke.Cards where cardID =1;
+
+
+GO;
+
+SELECT cardID,poke.Cards.userID,userName,poke.Cards.pokeID,pokemon,trading
+From poke.Cards 
+INNER JOIN poke.Dex ON poke.Cards.pokeID = poke.Dex.pokeID
+INNER JOIN poke.Users On poke.Cards.userID = poke.Users.userID
+WHERE poke.Cards.userID = @sortName;
+
+DROP table poke.Cards;
+
+ALTER TABLE poke.TradeDetail
+DROP CONSTRAINT FK_card_ID;
+
+CREATE TABLE poke.Cards(
+    cardID INT NOT NULL IDENTITY PRIMARY KEY,
+    userID INT NOT NULL,
+	pokeID INT NOT NULL,
+    trading int DEFAULT 0,
+);
+
+ALTER TABLE poke.TradeDetail ADD CONSTRAINT FK_card_ID 
+    FOREIGN KEY (cardID) REFERENCES poke.Cards(cardID);
+    
+    
+    UPDATE poke.Cards 
+    SET userID = 1 
+    WHERE cardID = 1;
