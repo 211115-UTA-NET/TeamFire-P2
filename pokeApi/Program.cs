@@ -1,7 +1,8 @@
 ﻿using pokeApi.Data;
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = "Server=tcp:daleyserver.database.windows.net,1433;Initial Catalog=PokeApp;Persist Security Info=False;User ID=dbadmin;Password=adminpw1!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+//var connectionString = "Server=tcp:daleyserver.database.windows.net,1433;Initial Catalog=PokeApp;Persist Security Info=False;User ID=dbadmin;Password=adminpw1!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+string connectionString = builder.Configuration.GetConnectionString("Poke-DB-Connection");
 IRepository repository = new SqlRepository(connectionString);
 
 
