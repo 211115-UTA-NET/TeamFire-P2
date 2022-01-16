@@ -24,31 +24,37 @@ namespace pokeApi.Data
         public async Task<IEnumerable<dtoUser>> GetUsersAsync(string name)
         {
             List<dtoUser> result = new List<dtoUser>();
-
+            /**
+             * if there's a Async version of the method, just replace with the Async one:
+             * for example: connection.Open() has an Async version called connection.OpenAsync()
+             *              reader.Read() has an Async version call reader.ReadAsync()
+             *   And always await the async method.
+             *   And always close the connection after you done.
+             */
             using SqlConnection connection = new(_connectionString);
-            connection.Open();
-
+            await connection.OpenAsync();
+            
             using SqlCommand cmd = new(
                         @"SELECT * FROM poke.Users WHERE userName=@sortName;",
                 connection);
 
             cmd.Parameters.AddWithValue("@sortName", name);
 
-            using SqlDataReader reader = cmd.ExecuteReader();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             // get trx from db
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 int ID = (int)reader["userID"];
-                string Name = reader["userName"].ToString();
-                string pw = reader["password"].ToString();
-                string email = reader["email"].ToString();
+                string Name = reader["userName"].ToString()!;
+                string pw = reader["password"].ToString()!;
+                string email = reader["email"].ToString()!;
 
                 result.Add(new( ID, Name, pw, email));
                 Console.WriteLine($"{Name}'s userID: {ID}");
 
             }
-
+            await connection.CloseAsync();
             return result;
         }
 
@@ -56,7 +62,7 @@ namespace pokeApi.Data
         {
             List<dtoUser> result = new List<dtoUser>();
             using SqlConnection connection = new(_connectionString);
-            connection.Open();
+            await connection.OpenAsync();
             string cmdText = @"INSERT INTO poke.Users (userName, password, email)
             SELECT * FROM(SELECT (@thisName) AS userName, (@thispw) as password, (@thisemail) as email) AS temp
             WHERE NOT EXISTS (Select *from poke.Users where userName = (@thisName));
@@ -68,21 +74,21 @@ namespace pokeApi.Data
             cmd.Parameters.AddWithValue("@thisemail", Email);
 
 
-            using SqlDataReader reader = cmd.ExecuteReader();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
 
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 int userID = (int)reader["userID"];
-                string userName = reader["userName"].ToString();
-                string password = reader["password"].ToString();
-                string email = reader["email"].ToString();
+                string userName = reader["userName"].ToString()!;
+                string password = reader["password"].ToString()!;
+                string email = reader["email"].ToString()!;
 
                 result.Add(new(userID, userName, password, email));
                 Console.WriteLine($"{userName}'s userID: {userID}");
 
             }
-
+            await connection.CloseAsync();
             return result;
         }
 
@@ -92,7 +98,7 @@ namespace pokeApi.Data
             List<dtoCard> result = new List<dtoCard>();
 
             using SqlConnection connection = new(_connectionString);
-            connection.Open();
+            await connection.OpenAsync();
 
             using SqlCommand cmd = new(
                         @"SELECT cardID,poke.Cards.userID,userName,poke.Cards.pokeID,pokemon,trading
@@ -105,22 +111,22 @@ namespace pokeApi.Data
 
             cmd.Parameters.AddWithValue("@sortID", userId);
 
-            using SqlDataReader reader = cmd.ExecuteReader();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             // get trx from db
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 int cardID = (int)reader["cardID"];
                 int userID = (int)reader["userID"];
-                string userName = reader["userName"].ToString();
+                string userName = reader["userName"].ToString()!;
                 int pokeID = (int)reader["pokeID"];
-                string pokemon = reader["pokemon"].ToString();
+                string pokemon = reader["pokemon"].ToString()!;
                 int trading = (int)reader["trading"];
                 result.Add(new(cardID, userID, userName, pokeID, pokemon, trading));
                 Console.WriteLine($"{pokemon} number: {cardID} is owned by {userName}.\nTrade being offered: {trading}");
 
             }
-
+            await connection.CloseAsync();
             return result;
         }
 
@@ -130,7 +136,7 @@ namespace pokeApi.Data
             List<dtoCard> result = new List<dtoCard>();
 
             using SqlConnection connection = new(_connectionString);
-            connection.Open();
+            await connection.OpenAsync();
 
             string cmdText = @"UPDATE poke.Cards 
                             SET userID = @newOwner 
@@ -152,16 +158,16 @@ namespace pokeApi.Data
             cmd.Parameters.AddWithValue("@newOwner", newOwner);
             cmd.Parameters.AddWithValue("@cardID", cardId);
 
-            using SqlDataReader reader = cmd.ExecuteReader();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             // get trx from db
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 int cardID = (int)reader["cardID"];
                 int userID = (int)reader["userID"];
-                string userName = reader["userName"].ToString();
+                string userName = reader["userName"].ToString()!;
                 int pokeID = (int)reader["pokeID"];
-                string pokemon = reader["pokemon"].ToString();
+                string pokemon = reader["pokemon"].ToString()!;
                 int trading = (int)reader["trading"];
                 result.Add(new(cardID, userID, userName, pokeID, pokemon, trading));
                 Console.WriteLine($"{pokemon} number: {cardID} is owned by {userName}.\nTrade being offered: {trading}");
@@ -169,7 +175,7 @@ namespace pokeApi.Data
             }
 
             Console.WriteLine($"Inventory Updated");
-
+            await connection.CloseAsync();
             return result;
         }
 
