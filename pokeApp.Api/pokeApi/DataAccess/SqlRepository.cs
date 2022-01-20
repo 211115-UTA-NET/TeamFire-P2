@@ -200,7 +200,7 @@ namespace pokeApi.Data
                 string offeredBy = reader["offeredBy"].ToString()!;
                 int tradeID = (int)reader["tradeID"];
                 string redeemedBy = reader["redeemedBy"].ToString()!;
-                result.Add(new(tradeID, offeredBy, redeemedBy));
+                result.Add(new(tradeID, offeredBy, -1, redeemedBy,-1,-1,"",-1));
                 Console.WriteLine($"Trade id: {tradeID} - \nInitiator :{redeemedBy} - Redeemer: {offeredBy}.");
 
 
@@ -233,7 +233,7 @@ namespace pokeApi.Data
                 int tradeID = (int)reader["tradeID"];
                 string offeredBy = reader["offeredBy"].ToString()!;
                 string redeemedBy = reader["redeemedBy"].ToString()!;
-                result.Add(new(tradeID, offeredBy, redeemedBy));
+                result.Add(new(tradeID, offeredBy, -1, redeemedBy, -1, -1, "", -1));
                 Console.WriteLine($"Trade id: {tradeID} - \nInitiator :{redeemedBy} - Redeemer: {offeredBy}.");
 
             }
@@ -268,7 +268,7 @@ namespace pokeApi.Data
                 int tradeID = (int)reader["tradeID"];
                 string pokemon = reader["cardID"].ToString()!;
                 string offeredBy = reader["userName"].ToString()!;
-                result.Add(new(tradeID, pokemon, offeredBy));
+                result.Add(new(tradeID,offeredBy,-1,"",-1,-1, pokemon, -1));
                 Console.WriteLine($"{offeredBy} traded {pokemon}.");
 
 
@@ -299,9 +299,8 @@ namespace pokeApi.Data
             {
                 // store tradeID
                 int tradeID = (int)reader["tradeID"];
-                result.Add(new(tradeID, offeredByID, receivedByID));
+                result.Add(new(tradeID, "", offeredByID, "", receivedByID, -1, "", -1));
                 Console.WriteLine($"Trade ID: {tradeID}");
-
             }
             await connection.CloseAsync();
             return result;
@@ -330,7 +329,8 @@ namespace pokeApi.Data
             while (await reader.ReadAsync())
             {
                 int cardID = (int)reader["cardID"];
-                result.Add(new(cardID));
+                // only store what you have here, other param are null/empty
+                result.Add(new(tradeId, "",offeredById, "",-1,-1,"",cardID));
                 Console.WriteLine($"{cardId} traded!");
             }
             await connection.CloseAsync();

@@ -13,37 +13,17 @@ namespace pokeApi.Models
         public string pokemon { get; }
         public int cardId { get; }
 
-
-
-        public dtoTradeRecord(int tradeID, string offeredBy, string redeemedBy)
+        public dtoTradeRecord(int tradeid, string offeredby, int offeredbyid, 
+            string redeemedby, int redeemedbyid, int pokeid, string pokemon, int cardid)
         {
-            this.tradeID = tradeID;
-            this.offeredBy = offeredBy;
-            this.redeemedBy = redeemedBy;
-        }
-
-        public dtoTradeRecord(int tradeID, int offeredByID, int redeemedByID)
-        {
-            this.tradeID = tradeID;
-            this.offeredByID = offeredByID;
-            this.redeemedByID = redeemedByID;
-        }
-
-        public dtoTradeRecord(string offeredBy, string pokemon)
-        {
-            this.offeredBy = offeredBy;
+            tradeID = tradeid;
+            offeredBy = offeredby;
+            offeredByID = offeredbyid;
+            redeemedBy = redeemedby;
+            redeemedByID = redeemedbyid;
+            pokeID = pokeid;
             this.pokemon = pokemon;
-        }
-
-        public dtoTradeRecord(int offeredByID, int redeemedByID)
-        {
-            this.offeredByID = offeredByID;
-            this.redeemedByID = redeemedByID;
-        }
-
-        public dtoTradeRecord(int cardId)
-        {
-            this.cardId = cardId;
+            cardId = cardid;
         }
     }
 }
