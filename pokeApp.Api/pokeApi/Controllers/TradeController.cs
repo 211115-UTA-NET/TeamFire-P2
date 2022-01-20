@@ -44,7 +44,7 @@ namespace pokeApi.Controllers
 
         //==============POST==============///
         [HttpPost]
-        [ActionName("GetDetail")]
+        [ActionName("AddTradeDetail")]
         public async Task<IActionResult> AddNewRecordAsync([FromQuery, Required] int tradeId, [Required] int cardId, [Required] int offeredId)
         {
             IEnumerable<dtoTradeRecord> record = await _repository.AddNewRecordAsync(tradeId, cardId, offeredId);
@@ -52,7 +52,7 @@ namespace pokeApi.Controllers
         }
 
         [HttpPost]
-        [ActionName("GetRecord")]
+        [ActionName("AddCompletedTrade")]
         public async Task<IActionResult> AddNewRecordAsync([FromQuery, Required] int offeredByID, [Required] int recevedByID)
         {
             IEnumerable<dtoTradeRecord> record = await _repository.AddNewRecordAsync(offeredByID, recevedByID);
