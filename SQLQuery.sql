@@ -67,4 +67,18 @@ SET trading = 0
 WHERE cardID = 1;
 
 insert poke.Cards values (3,2,1);
-SELECT Max(tradeID) FROM poke.CompletedTrades where offeredBy =1 AND redeemedBy=3
+SELECT Max(tradeID) AS tradeID FROM poke.CompletedTrades where offeredBy =1 AND redeemedBy=3
+
+select poke.TradeDetail.tradeID, p.pokemon as cardID, o.userName
+                    from poke.TradeDetail
+                    join poke.Dex p on poke.TradeDetail.cardID = p.pokeID
+                    join poke.Users o on  poke.TradeDetail.userID = o.userID
+                    where tradeID = 1;
+
+
+select poke.CompletedTrades.tradeID, o.userName as offeredBy, o.userID, r.userName as redeemedBy, r.userID
+from poke.CompletedTrades
+join poke.Users o on  poke.CompletedTrades.offeredBy = o.userID
+join poke.Users r on  poke.CompletedTrades.redeemedBy = r.userID
+where (o.userName = 'test' or r.userName = 'test' );
+
