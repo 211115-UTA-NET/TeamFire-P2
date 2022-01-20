@@ -27,7 +27,7 @@ env:
 on:
   push:
     branches:
-      - main, pokeApi
+      - main
   workflow_dispatch:
 
 jobs:
