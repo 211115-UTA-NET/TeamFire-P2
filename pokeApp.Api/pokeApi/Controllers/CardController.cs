@@ -29,7 +29,7 @@ namespace pokeApi.Controllers
         }
 
         //==============POST==============//
-        [HttpPut]
+        [HttpPut("updateOwner")]
         public async Task<IActionResult> UpdateCardOwnerAsync([FromQuery, Required] int userId, [Required] int cardId)
         {
             IEnumerable<dtoCard> Cards = await _repository.UpdateCardOwnerAsync(userId, cardId);
