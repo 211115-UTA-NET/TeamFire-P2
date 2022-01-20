@@ -52,15 +52,15 @@ jobs:
 
       - name: Restore
         run: |
-          cd pokeApi
+          cd pokeApp.Api/pokeApi/
           dotnet restore
       - name: Build with dotnet
         run: |
-          cd pokeApi
+          cd pokeApp.Api/pokeApi/
           dotnet build --no-restore -c Release
       - name: dotnet publish
         run: |
-          cd pokeApi
+          cd pokeApp.Api/pokeApi/
           dotnet publish --no-build -c Release -o '${{env.DOTNET_ROOT}}/myapp'
 
 #       - name: Upload artifact for deployment job
