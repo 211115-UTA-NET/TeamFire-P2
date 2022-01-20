@@ -4,14 +4,14 @@ namespace pokeApi.Models
     public class dtoTradeRecord
     {
 
-        public int tradeID { get; set; }
-        public string offeredBy { get; set; }
-        public int offeredByID { get; set; }
-        public string redeemedBy { get; set; }
-        public int redeemedByID { get; set; }
-        public int pokeID { get; set; }
-        public string pokemon { get; set; }
-        public int cardId { get; set; }
+        public int tradeID { get; }
+        public string offeredBy { get; }
+        public int offeredByID { get; }
+        public string redeemedBy { get; }
+        public int redeemedByID { get; }
+        public int pokeID { get; }
+        public string pokemon { get; }
+        public int cardId { get; }
 
 
 

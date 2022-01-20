@@ -56,5 +56,15 @@ ALTER TABLE poke.TradeDetail ADD CONSTRAINT FK_card_ID
 select * from poke.Users;
 SELECT * FROM poke.Cards;
 SELECT * FROM poke.CompletedTrades;
-select * from poke.Dex;
 select * from poke.TradeDetail;
+select * from poke.Dex;
+
+UPDATE poke.Cards 
+SET userID = 3
+WHERE cardID = 1;
+ UPDATE poke.Cards 
+SET trading = 0 
+WHERE cardID = 1;
+
+insert poke.Cards values (3,2,1);
+SELECT Max(tradeID) FROM poke.CompletedTrades where offeredBy =1 AND redeemedBy=3

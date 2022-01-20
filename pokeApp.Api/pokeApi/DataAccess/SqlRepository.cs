@@ -278,7 +278,7 @@ namespace pokeApi.Data
         }
 
         //-------------ADD TRADE RECORD----------///
-        public async Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int offeredByID, int recevedByID)
+        public async Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int offeredByID, int receivedByID)
         {
             List<dtoTradeRecord> result = new List<dtoTradeRecord>();
             using SqlConnection connection = new(_connectionString);
@@ -288,18 +288,19 @@ namespace pokeApi.Data
                             VALUES (@offeredId, @redeemedId);";
             using SqlCommand cmd = new(cmdText, connection);
             cmd.Parameters.AddWithValue("@offeredId", offeredByID);
-            cmd.Parameters.AddWithValue("@redeemedId", recevedByID);
+            cmd.Parameters.AddWithValue("@redeemedId", receivedByID);
 
 
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             // get trx from db
+
             while (await reader.ReadAsync())
             {
+                // store tradeID
                 int tradeID = (int)reader["tradeID"];
-                result.Add(new(tradeID));
+                result.Add(new(tradeID, offeredByID, receivedByID));
                 Console.WriteLine($"Trade ID: {tradeID}");
-
 
             }
             await connection.CloseAsync();
@@ -331,8 +332,6 @@ namespace pokeApi.Data
                 int cardID = (int)reader["cardID"];
                 result.Add(new(cardID));
                 Console.WriteLine($"{cardId} traded!");
-
-
             }
             await connection.CloseAsync();
             return result;
