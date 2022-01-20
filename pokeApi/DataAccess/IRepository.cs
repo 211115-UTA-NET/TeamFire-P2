@@ -8,8 +8,11 @@ namespace pokeApi.Data
         Task<IEnumerable<dtoUser>> AddNewUserAsync(string name, string pw, string Email);
         Task<IEnumerable<dtoCard>> GetCardsAsync(int userId);
         Task<IEnumerable<dtoCard>> UpdateCardOwnerAsync(int userId, int cardId);
-        //Task<IEnumerable<dtoTradeRecord>> GetTradesDetailsAsync(string name);
-        //Task<IEnumerable<dtoTradeRecord>> AddNewTradesAsync(string cardId, string pokemon, string seller, string buyer);
+        Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(string name);
+        Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(int tradeId);
+        Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync();
+        Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int offeredByID, int recevedByID);
+        Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int tradeId, int cardId, int offeredByID);
 
     }
 }

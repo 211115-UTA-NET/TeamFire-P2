@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Xml.Serialization;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using pokeApi.Models;
 
 namespace pokeApi.Data
@@ -179,88 +174,174 @@ namespace pokeApi.Data
             return result;
         }
 
+        //------------SPECIFIC USER-----------------//
+        public async Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(string name)
+        {
+            List<dtoTradeRecord> result = new List<dtoTradeRecord>();
 
-        //================= GET TRADES ========//
-        //public async Task<IEnumerable<dtoTradeRecord>> GetTradesDetailsAsync(int userId)
-        //{
-        //    List<dtoTradeRecord> result = new List<dtoTradeRecord>();
+            using SqlConnection connection = new(_connectionString);
+            await connection.OpenAsync();
 
-        //    using SqlConnection connection = new(_connectionString);
-        //    connection.Open();
+            using SqlCommand cmd = new(
+                        @"select poke.CompletedTrades.tradeID, o.userName as offeredBy, r.userName as redeemedBy
+                        from poke.CompletedTrades
+                        join poke.Users o on  poke.CompletedTrades.offeredBy = o.userID
+                        join poke.Users r on  poke.CompletedTrades.redeemedBy = r.userID
+                        where (o.userName = @sortID or r.userName = @sortID );",
+                connection);
 
-        //    using SqlCommand cmd = new(
-        //                @"SELECT * FROM poke.Trades
-        //                WHERE offeredBy = @sortName
-        //                OR redeemedBy = @sortName;",
-        //        connection);
+            cmd.Parameters.AddWithValue("@sortID", name);
 
-        //    cmd.Parameters.AddWithValue("@sortName", userId);
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-        //    using SqlDataReader reader = cmd.ExecuteReader();
-
-        //    // get trx from db
-        //    while (reader.Read())
-        //    {
-        //        int tradeID = (int)reader["tradeID"];
-        //        string cardID = reader["cardID"].ToString();
-        //        string pokemon = reader["pokemon"].ToString();
-        //        string offeredBy = reader["offeredBy"].ToString();
-        //        string redeemedBy = reader["redeemedBy"].ToString();
-        //        result.Add(new(tradeID, cardID, pokemon, offeredBy, redeemedBy));
-        //        Console.WriteLine($"Trade id: {tradeID} - {pokemon}/{cardID}\nTraded to {redeemedBy} by {offeredBy}.");
-
-
-        //    }
-
-        //    return result;
-        //}
-
-        ////==================POST TRADE=======// --needs to be corrected b/c there could be multiple trades w/ same card number -should just use timestamp for re-selection
-        //public async Task<IEnumerable<dtoTrade>> AddNewTradesAsync(string cardId, string pokemonName, string seller, string buyer)
-        //{
-        //    List<dtoTrade> result = new List<dtoTrade>();
-        //    using SqlConnection connection = new(_connectionString);
-        //    connection.Open();
-
-        //    // assume the order exist already in the DB
-        //    string cmdText = @"INSERT INTO poke.Trades ( cardID, pokemon, offeredBy, redeemedBy)
-        //                       VALUES (  @thisID, @thisPokemon, @thisSeller , @thisBuyer);
-
-        //                        SELECT * FROM poke.Trades
-        //                        WHERE cardID = @thisID";
-        //    using SqlCommand cmd = new(cmdText, connection);
-
-        //    // ado.net requires you to use DBNull instead of null when you mean a SQL NULL value
-        //    cmd.Parameters.AddWithValue("@thisID", cardId);
-        //    cmd.Parameters.AddWithValue("@thisPokemon", pokemonName);
-        //    cmd.Parameters.AddWithValue("@thisSeller", seller);
-        //    cmd.Parameters.AddWithValue("@thisBuyer", buyer);
-        //    //cmd.ExecuteNonQuery();
-        //    //connection.Close();
-
-        //    using SqlDataReader reader = cmd.ExecuteReader();
-
-        //    // get trx from db
-        //    while (reader.Read())
-        //    {
-        //        int tradeID = (int)reader["tradeID"];
-        //        string cardID = reader["cardID"].ToString();
-        //        string pokemon = reader["pokemon"].ToString();
-        //        string offeredBy = reader["offeredBy"].ToString();
-        //        string redeemedBy = reader["redeemedBy"].ToString();
-        //        result.Add(new(tradeID, cardID, pokemon, offeredBy, redeemedBy));
-        //        Console.WriteLine($"Trade id: {tradeID} - {pokemon}/{cardID}\nTraded to {redeemedBy} by {offeredBy}.");
+            // get trx from db
+            while (await reader.ReadAsync())
+            {
+                string offeredBy = reader["offeredBy"].ToString()!;
+                int tradeID = (int)reader["tradeID"];
+                string redeemedBy = reader["redeemedBy"].ToString()!;
+                result.Add(new(tradeID, offeredBy, redeemedBy));
+                Console.WriteLine($"Trade id: {tradeID} - \nInitiator :{redeemedBy} - Redeemer: {offeredBy}.");
 
 
-        //    }
+            }
+            await connection.CloseAsync();
 
-        //    return result;
-        //}
+            return result;
+        }
+
+        //--------------------ALL RECENT TRADES----------------//
+        public async Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync()
+        {
+            List<dtoTradeRecord> result = new List<dtoTradeRecord>();
+
+            using SqlConnection connection = new(_connectionString);
+            await connection.OpenAsync();
+
+            using SqlCommand cmd = new(
+                        @"select poke.CompletedTrades.tradeID, o.userName as offeredBy, r.userName as redeemedBy
+                        from poke.CompletedTrades
+                        join poke.Users o on  poke.CompletedTrades.offeredBy = o.userID
+                        join poke.Users r on  poke.CompletedTrades.redeemedBy = r.userID;",
+                connection);
+
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            // get trx from db
+            while (await reader.ReadAsync())
+            {
+                int tradeID = (int)reader["tradeID"];
+                string offeredBy = reader["offeredBy"].ToString()!;
+                string redeemedBy = reader["redeemedBy"].ToString()!;
+                result.Add(new(tradeID, offeredBy, redeemedBy));
+                Console.WriteLine($"Trade id: {tradeID} - \nInitiator :{redeemedBy} - Redeemer: {offeredBy}.");
+
+            }
+            await connection.CloseAsync();
+            return result;
+        }
 
 
+        //-----------GET TRADE DETAILS-----------//
+        public async Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(int tradeId)
+        {
+            List<dtoTradeRecord> result = new List<dtoTradeRecord>();
+
+            using SqlConnection connection = new(_connectionString);
+            await connection.OpenAsync();
+
+            using SqlCommand cmd = new(
+                        @"select poke.TradeDetail.tradeID, p.pokemon as cardID, o.userName
+                    from poke.TradeDetail
+                    join poke.Dex p on poke.TradeDetail.cardID = p.pokeID
+                    join poke.Users o on  poke.TradeDetail.userID = o.userID
+                    where tradeID = @sortId;",
+                connection);
+
+            cmd.Parameters.AddWithValue("@sortId", tradeId);
+
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            // get trx from db
+            while (await reader.ReadAsync())
+            {
+                int tradeID = (int)reader["tradeID"];
+                string pokemon = reader["cardID"].ToString()!;
+                string offeredBy = reader["userName"].ToString()!;
+                result.Add(new(tradeID, pokemon, offeredBy));
+                Console.WriteLine($"{offeredBy} traded {pokemon}.");
 
 
+            }
+            await connection.CloseAsync();
+            return result;
+        }
+
+        //-------------ADD TRADE RECORD----------///
+        public async Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int offeredByID, int recevedByID)
+        {
+            List<dtoTradeRecord> result = new List<dtoTradeRecord>();
+            using SqlConnection connection = new(_connectionString);
+            await connection.OpenAsync();
+            string cmdText = @"INSERT into poke.CompletedTrades(offeredBy, redeemedBy)
+                            OUTPUT INSERTED.tradeID
+                            VALUES (@offeredId, @redeemedId);";
+            using SqlCommand cmd = new(cmdText, connection);
+            cmd.Parameters.AddWithValue("@offeredId", offeredByID);
+            cmd.Parameters.AddWithValue("@redeemedId", recevedByID);
+
+
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            // get trx from db
+            while (await reader.ReadAsync())
+            {
+                int tradeID = (int)reader["tradeID"];
+                result.Add(new(tradeID));
+                Console.WriteLine($"Trade ID: {tradeID}");
+
+
+            }
+            await connection.CloseAsync();
+            return result;
+        }
+
+        //-------------ADD TRADE DETAIL----------//
+
+
+        public async Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int tradeId, int cardId, int offeredById)
+        {
+            List<dtoTradeRecord> result = new List<dtoTradeRecord>();
+            using SqlConnection connection = new(_connectionString);
+            await connection.OpenAsync();
+            string cmdText = @"INSERT INTO poke.TradeDetail( tradeID, cardID, userID)
+                            OUTPUT  INSERTED.cardID
+                            VALUES (@tradeId, @cardId, @offeredId);";
+            using SqlCommand cmd = new(cmdText, connection);
+            cmd.Parameters.AddWithValue("@tradeId", tradeId);
+            cmd.Parameters.AddWithValue("@cardId", cardId);
+            cmd.Parameters.AddWithValue("@offeredId", offeredById);
+
+
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            // get trx from db
+            while (await reader.ReadAsync())
+            {
+                int cardID = (int)reader["cardID"];
+                result.Add(new(cardID));
+                Console.WriteLine($"{cardId} traded!");
+
+
+            }
+            await connection.CloseAsync();
+            return result;
+        }
 
     }
+
+
+
 }
+
 

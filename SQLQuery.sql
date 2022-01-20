@@ -18,7 +18,7 @@ CREATE TABLE poke.Cards(
     cardID INT NOT NULL IDENTITY PRIMARY KEY,
     userID INT NOT NULL,
 	pokeID INT NOT NULL,
-    is_tradeable BIT DEFAULT 0,
+    trading BIT DEFAULT 0,
 );
 
 CREATE TABLE poke.CompletedTrades (
@@ -52,3 +52,9 @@ ALTER TABLE poke.TradeDetail ADD CONSTRAINT FK_trade_ID
 
 ALTER TABLE poke.TradeDetail ADD CONSTRAINT FK_card_ID 
     FOREIGN KEY (cardID) REFERENCES poke.Cards(cardID);
+
+select * from poke.Users;
+SELECT * FROM poke.Cards;
+SELECT * FROM poke.CompletedTrades;
+select * from poke.Dex;
+select * from poke.TradeDetail;
