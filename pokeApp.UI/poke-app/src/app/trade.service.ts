@@ -19,8 +19,7 @@ export class TradeService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService,
-    private location: Location  ) { }
+    private messageService: MessageService,) { }
 
 
   /** GET trades from the server */
