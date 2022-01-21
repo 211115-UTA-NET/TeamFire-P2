@@ -8,6 +8,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LogoutComponent } from './logout/logout.component';
+import { CollectionComponent } from './collection/collection.component';
+import { TradehistoryComponent } from './tradehistory/tradehistory.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { LogoutComponent } from './logout/logout.component';
     DashboardComponent,
     RegisterComponent,
     ProfileComponent,
-    LogoutComponent
+    LogoutComponent,
+    CollectionComponent,
+    TradehistoryComponent
   ],
   imports: [
     BrowserModule,
