@@ -23,6 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         pwd
+        ls
         cd /pokeApp.UI/poke-app/
         npm install
       
