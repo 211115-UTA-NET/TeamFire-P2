@@ -1,2 +1,13 @@
-<h1>Pokemon Trade History</h1>
-<button (click)="goBack()">Go back</button>
+<app-trade-search></app-trade-search>
+  <div id="trade-history-component">
+    <h1>Pokemon Trade History</h1>
+    <ul class="trade-list">
+      <li *ngFor="let tradeRecord of tradeRecords$ | async">
+        <a routerLink="/trades">
+          {{tradeRecord.offeredBy}} traded {{tradeRecord.pokemon}} to {{tradeRecord.redeemedBy}}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <button (click)="goBack()">Go back</button>

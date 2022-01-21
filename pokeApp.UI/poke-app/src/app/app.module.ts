@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { Component, OnInit } from '@angular/core';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -10,6 +10,10 @@ import { ProfileComponent } from './profile/profile.component';
 import { LogoutComponent } from './logout/logout.component';
 import { CollectionComponent } from './collection/collection.component';
 import { TradehistoryComponent } from './tradehistory/tradehistory.component';
+import { HttpClientModule } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
+import { TradeSearchComponent } from './trade-search/trade-search.component'
+
 
 @NgModule({
   declarations: [
@@ -20,7 +24,8 @@ import { TradehistoryComponent } from './tradehistory/tradehistory.component';
     ProfileComponent,
     LogoutComponent,
     CollectionComponent,
-    TradehistoryComponent
+    TradehistoryComponent,
+    TradeSearchComponent
   ],
   imports: [
     BrowserModule,
