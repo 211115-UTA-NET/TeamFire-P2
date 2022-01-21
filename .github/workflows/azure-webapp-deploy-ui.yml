@@ -22,14 +22,12 @@ jobs:
         
     - name: Install dependencies
       run: |
-        pwd
-        ls
-        cd /pokeApp.UI/poke-app/
+        cd pokeApp.UI/poke-app/
         npm install
       
     - name: Build
       run: |
-        cd /pokeApp.UI/poke-app/
+        cd pokeApp.UI/poke-app/
         npm run build -- --prod
         
     - name: 'Deploy to Azure WebApp'
