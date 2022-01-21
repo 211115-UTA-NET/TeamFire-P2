@@ -1,0 +1,5 @@
+{
+  "appService.zipIgnorePattern": ["node_modules{,/**}", ".vscode{,/**}"],
+  "appService.defaultWebAppToDeploy": "/subscriptions/6eea0d80-2ea2-4e2c-8b8b-6522e15e3417/resourceGroups/211115SQL/providers/Microsoft.Web/sites/PokemonTradingApp",
+  "appService.deploySubpath": "pokeApp.UI\\poke-app"
+}
