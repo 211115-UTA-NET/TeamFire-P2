@@ -14,16 +14,22 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@master
+      
     - name: Use Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ env.NODE_VERSION }}
+        
     - name: Install dependencies
-      run: npm install
+      run: |
+        cd /pokeApp.UI/poke-app/
+        npm install
+      
     - name: Build
       run: |
         cd /pokeApp.UI/poke-app/
         npm run build -- --prod
+        
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v1
       with:
