@@ -4,7 +4,7 @@ on:
     branches:
       - main
 env:
-  AZURE_WEBAPP_NAME: PokemonTradingApp
+  AZURE_WEBAPP_NAME: Pokemon-Trading-App
   AZURE_WEBAPP_PACKAGE_PATH: './pokeApp.UI/poke-app/dist/poke-app'
   NODE_VERSION: '16.13.x'
 
