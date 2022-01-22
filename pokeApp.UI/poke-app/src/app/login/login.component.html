@@ -1,12 +1,6 @@
-<h1>Login Page</h1>
-<form id="form" action="">
-    Username: <input type="text" name="username" placeholder="Enter your username..." required>
-    <br>
-    Password: <input type="password" name="password" placeholder="Enter your password..." required>
-    <br>
-</form>
+<h1>Welcome to Pokemon Trading App</h1>
+<h3>Already have an account?</h3>
 <!-- should be onclick => some event to check if user is valid user -->
-<button routerLink="/dashboard">Login to Dashboard</button>
-
-<h2>New User?</h2>
-<button routerLink="/register">Register</button>
+<button class="btn btn-primary btn-block" (click)="loginWithRedirect()">
+    Click here to Log in
+</button>
