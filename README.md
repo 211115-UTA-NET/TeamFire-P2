@@ -1,4 +1,7 @@
-# TeamFire-P2
+# Pokemon Trading App
+- https://pokemon-trading-app.azurewebsites.net
+
+### TeamFire-P2
 - Team Members: 
     - Kareem Daley 
     - Ben Herbert
