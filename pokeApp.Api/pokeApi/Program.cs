@@ -20,6 +20,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IRepository>(repository);
 
+builder.Services.AddCors(options =>
+{
+    // here you put all the origins that websites making requests to this API via JS are hosted at
+    options.AddDefaultPolicy(builder =>
+        builder
+            .WithOrigins("http://127.0.0.1:4200",
+                         "https://211115pokemonapp.azurewebsites.net/")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,6 +42,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 
