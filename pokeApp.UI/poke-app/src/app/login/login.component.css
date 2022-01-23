@@ -1,0 +1,36 @@
+.box {
+  position: absolute;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  color: rgb(250, 255, 202);
+  display: block;
+  background-color: rgba(0, 0, 0, 0.699);
+  padding: 1cm;
+  border-radius: 15px;
+}
+.btn {
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: rgb(77, 77, 77);
+  background-color: #ffe6af;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px rgb(73, 73, 73);
+}
+
+.btn:hover {
+  background-color: #ffd476;
+}
+
+.btn:active {
+  background-color: #ffd476;
+  box-shadow: 0 5px rgb(73, 73, 73);
+  transform: translateY(4px);
+}
