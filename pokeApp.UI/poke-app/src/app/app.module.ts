@@ -11,6 +11,7 @@ import { TradehistoryComponent } from './tradehistory/tradehistory.component';
 
 import { AuthModule } from '@auth0/auth0-angular';
 import { environment as env } from '../environments/environment';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { environment as env } from '../environments/environment';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     AuthModule.forRoot({
       ...env.auth,
     }),

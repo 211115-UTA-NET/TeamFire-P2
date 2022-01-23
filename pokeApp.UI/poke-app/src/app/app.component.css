@@ -1,8 +1,9 @@
 header h1 {
   text-align: center;
   padding-top: 40px;
-  font-size: 50px;
+  font-size: 45px;
   color: rgb(236, 236, 236);
+  position: absolute;
 }
 
 header .crop h1 {

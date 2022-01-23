@@ -18,7 +18,9 @@ export class LoginComponent implements OnInit {
       'url(../../assets/login-background.jpg)'
     );
     this.renderer.setStyle(document.body, 'background-size', 'cover');
-    // this.renderer.setStyle(document.body, 'background-repeat', 'no-repeat');
+    this.renderer.setStyle(document.body, 'background-repeat', 'repeat');
+    // this.renderer.setStyle(document.body, 'width', '100%');
+    // this.renderer.setStyle(document.body, 'height', '1000px');
   }
 
   loginWithRedirect(): void {
