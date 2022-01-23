@@ -19,12 +19,12 @@ export class DashboardComponent implements OnInit {
     private http: HttpClient
   ) {}
   profileJson: string = '';
-  user: User = {
-    userID: -1,
-    userName: '',
-    password: '',
-    email: '',
-  };
+  /**
+   * type assertion on user -> will autocomplete Employee properties
+   * Compiler will provide autocomplete properties,
+   * but will not give an error if you forgot to add the properties
+   **/
+  user = <User>{};
   trades: TradeRecord[] = [];
   ngOnInit(): void {
     // this.renderer.setStyle(document.body, 'background-color', 'white');
