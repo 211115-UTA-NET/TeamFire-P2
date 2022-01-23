@@ -1,8 +1,11 @@
-<h1>Dashboard</h1>
-<nav>
-    <a routerLink="/profile">Profile</a> |
-    <button class="btn btn-danger btn-block" (click)="logout()">Log out</button>
-</nav>
-<br>
-<label for="search-box">Search For Pokemon: </label>
-<input #searchBox id="search-box" />
+<body>
+    <h1>Dashboard</h1>
+    <nav class="topnav">
+        <a routerLink="/profile">Profile</a>
+        <a (click)="logout()">Log out</a>
+    </nav>
+    <br>
+    <!-- <label for="search-box">Search For Pokemon: </label>
+    <input #searchBox id="search-box" /> -->
+
+</body>
