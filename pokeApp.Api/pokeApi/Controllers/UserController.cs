@@ -19,15 +19,15 @@ namespace pokeApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllByNameAsync([FromQuery, Required] string name, [Required] string email)
         {
-            IEnumerable<dtoUser> Users = await _repository.GetUsersAsync(name, email);
+            IEnumerable<dtoUser> Users = await _repository.GetUsersAsync(name.ToLower(), email.ToLower());
             return new JsonResult(Users);
         }
 
         //==============POST==============//
         [HttpPost]
-        public async Task<IActionResult> AddNewUserAsync([FromQuery, Required] string name, [Required]string pw, [Required] string email)
+        public async Task<IActionResult> AddNewUserAsync([FromBody, Required] dtoAddUser userinfo)
         {
-            IEnumerable<dtoUser> Users = await _repository.AddNewUserAsync(name, pw, email);
+            IEnumerable<dtoUser> Users = await _repository.AddNewUserAsync(userinfo.name!.ToLower(), userinfo.pw!, userinfo.email!.ToLower());
             return new JsonResult(Users);
         }
 
