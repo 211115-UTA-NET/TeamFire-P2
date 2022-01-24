@@ -9,19 +9,7 @@ import { AuthService } from '@auth0/auth0-angular';
 export class LoginComponent implements OnInit {
   constructor(public auth: AuthService, private renderer: Renderer2) {}
 
-  ngOnInit(): void {
-    // document.body.classList.add('loginbg');
-    // document.body.classList.add('container-fluid');
-    this.renderer.setStyle(
-      document.body,
-      'background-image',
-      'url(../../assets/login-background.jpg)'
-    );
-    this.renderer.setStyle(document.body, 'background-size', 'cover');
-    this.renderer.setStyle(document.body, 'background-repeat', 'repeat');
-    // this.renderer.setStyle(document.body, 'width', '100%');
-    // this.renderer.setStyle(document.body, 'height', '1000px');
-  }
+  ngOnInit(): void {}
 
   loginWithRedirect(): void {
     this.auth.loginWithRedirect({
