@@ -16,7 +16,7 @@ namespace pokeApi.Data
         }
 
         //============== Get User===========//
-        public async Task<IEnumerable<dtoUser>> GetUsersAsync(string name)
+        public async Task<IEnumerable<dtoUser>> GetUsersAsync(string name, string useremail)
         {
             List<dtoUser> result = new List<dtoUser>();
             /**
@@ -30,10 +30,11 @@ namespace pokeApi.Data
             await connection.OpenAsync();
             
             using SqlCommand cmd = new(
-                        @"SELECT * FROM poke.Users WHERE userName=@sortName;",
+                        @"SELECT * FROM poke.Users WHERE userName=@sortName AND email=@useremail;",
                 connection);
 
             cmd.Parameters.AddWithValue("@sortName", name);
+            cmd.Parameters.AddWithValue("@useremail", useremail);
 
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
@@ -52,39 +53,45 @@ namespace pokeApi.Data
             await connection.CloseAsync();
             return result;
         }
-
         public async Task<IEnumerable<dtoUser>> AddNewUserAsync(string name, string pw, string Email)
         {
-            List<dtoUser> result = new List<dtoUser>();
-            using SqlConnection connection = new(_connectionString);
-            await connection.OpenAsync();
-            string cmdText = @"INSERT INTO poke.Users (userName, password, email)
+            // check is the new user already exist
+            var user = await GetUsersAsync(name, Email);
+            // if not exist -> create account
+            if (user == null || !user.Any())
+            {
+                List<dtoUser> result = new List<dtoUser>();
+                using SqlConnection connection = new(_connectionString);
+                await connection.OpenAsync();
+                string cmdText = @"INSERT INTO poke.Users (userName, password, email)
             SELECT * FROM(SELECT (@thisName) AS userName, (@thispw) as password, (@thisemail) as email) AS temp
             WHERE NOT EXISTS (Select *from poke.Users where userName = (@thisName));
                                 SELECT * FROM poke.Users
                                 WHERE userName=@thisName;";
-            using SqlCommand cmd = new(cmdText, connection);
-            cmd.Parameters.AddWithValue("@thisName", name);
-            cmd.Parameters.AddWithValue("@thispw", pw);
-            cmd.Parameters.AddWithValue("@thisemail", Email);
+                using SqlCommand cmd = new(cmdText, connection);
+                cmd.Parameters.AddWithValue("@thisName", name);
+                cmd.Parameters.AddWithValue("@thispw", pw);
+                cmd.Parameters.AddWithValue("@thisemail", Email);
 
 
-            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
 
-            while (await reader.ReadAsync())
-            {
-                int userID = (int)reader["userID"];
-                string userName = reader["userName"].ToString()!;
-                string password = reader["password"].ToString()!;
-                string email = reader["email"].ToString()!;
+                while (await reader.ReadAsync())
+                {
+                    int userID = (int)reader["userID"];
+                    string userName = reader["userName"].ToString()!;
+                    string password = reader["password"].ToString()!;
+                    string email = reader["email"].ToString()!;
 
-                result.Add(new(userID, userName, password, email));
-                Console.WriteLine($"{userName}'s userID: {userID}");
+                    result.Add(new(userID, userName, password, email));
+                    Console.WriteLine($"{userName}'s userID: {userID}");
 
+                }
+                await connection.CloseAsync();
+                return result;
             }
-            await connection.CloseAsync();
-            return result;
+            return user;
         }
 
         //================= GET CARDS =========================//

@@ -17,9 +17,9 @@ namespace pokeApi.Controllers
         }
         //============ GET ===============//
         [HttpGet]
-        public async Task<IActionResult> GetAllByNameAsync([FromQuery, Required] string name)
+        public async Task<IActionResult> GetAllByNameAsync([FromQuery, Required] string name, [Required] string email)
         {
-            IEnumerable<dtoUser> Users = await _repository.GetUsersAsync(name);
+            IEnumerable<dtoUser> Users = await _repository.GetUsersAsync(name, email);
             return new JsonResult(Users);
         }
 
