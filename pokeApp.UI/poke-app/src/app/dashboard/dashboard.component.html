@@ -1,5 +1,7 @@
 <body>
-    <h1>Dashboard</h1>
+    <div class="pgtitle">
+        <h1>Trading Center</h1>
+    </div>
     <nav class="topnav">
         <a routerLink="/profile">Profile</a>
         <a (click)="logout()">Log out</a>
@@ -8,13 +10,30 @@
     <!-- <label for="search-box">Search For Pokemon: </label>
     <input #searchBox id="search-box" /> -->
     <div class="trades">
-        <ul class="items">
+        <!-- <ul class="items">
             <li *ngFor="let trade of trades">
-                <!-- <a routerLink="/detail/{{trade.id}}">
+                <a routerLink="/detail/{{trade.id}}">
                     <span class="badge">{{hero.id}}</span> {{hero.name}}
-                </a> -->
+                </a>
                 <p>offeredBy: {{ trade.offeredBy }}, redeemedBy: {{ trade.redeemedBy }}</p>
             </li>
-        </ul>
+        </ul> -->
+        <mat-grid-list class="grid" cols="4" rowHeight="2:3">
+            <mat-grid-tile>
+                <mat-card class="example-card">
+                    <img mat-card-image src="../../assets/images/001.png" alt="Photo of a Shiba Inu">
+                    <mat-card-title>Bulbasaure</mat-card-title>
+                    <mat-card-subtitle>Owner: Username</mat-card-subtitle>
+                    <mat-card-actions>
+                        <button mat-button class="button">Trade!</button>
+                    </mat-card-actions>
+                </mat-card>
+            </mat-grid-tile>
+            <mat-grid-tile>just</mat-grid-tile>
+            <mat-grid-tile>a</mat-grid-tile>
+            <mat-grid-tile>template</mat-grid-tile>
+            <mat-grid-tile>5</mat-grid-tile>
+            <mat-grid-tile>6</mat-grid-tile>
+        </mat-grid-list>
     </div>
 </body>

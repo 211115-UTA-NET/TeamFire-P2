@@ -12,6 +12,8 @@ import { TradehistoryComponent } from './tradehistory/tradehistory.component';
 import { AuthModule } from '@auth0/auth0-angular';
 import { environment as env } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -23,9 +25,11 @@ import { HttpClientModule } from '@angular/common/http';
     TradehistoryComponent,
   ],
   imports: [
+    MatCardModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    MatGridListModule,
     AuthModule.forRoot({
       ...env.auth,
     }),
