@@ -132,6 +132,43 @@ namespace pokeApi.Data
             return result;
         }
 
+        //------------GET CARDS BEING TRADED ----------//
+        public async Task<IEnumerable<dtoCard>> GetTradeCardsAsync()
+        {
+            List<dtoCard> result = new List<dtoCard>();
+
+            using SqlConnection connection = new(_connectionString);
+            await connection.OpenAsync();
+
+            using SqlCommand cmd = new(
+                        @"SELECT cardID,poke.Cards.userID,userName,poke.Cards.pokeID,pokemon,trading
+                        From poke.Cards 
+                        INNER JOIN poke.Dex ON poke.Cards.pokeID = poke.Dex.pokeID
+                        INNER JOIN poke.Users On poke.Cards.userID = poke.Users.userID
+                        WHERE poke.Cards.trading = 1;",
+
+            connection);
+
+
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            // get trx from db
+            while (await reader.ReadAsync())
+            {
+                int cardID = (int)reader["cardID"];
+                int userID = (int)reader["userID"];
+                string userName = reader["userName"].ToString()!;
+                int pokeID = (int)reader["pokeID"];
+                string pokemon = reader["pokemon"].ToString()!;
+                int trading = (int)reader["trading"];
+                result.Add(new(cardID, userID, userName, pokeID, pokemon, trading));
+                Console.WriteLine($"{pokemon} number: {cardID} is owned by {userName}.\nTrade being offered: {trading}");
+
+            }
+            await connection.CloseAsync();
+            return result;
+        }
+
         //================== UPDATE CARD OWNER ======//
         public async Task<IEnumerable<dtoCard>> UpdateCardOwnerAsync(int newOwner, int cardId)
         {
