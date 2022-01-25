@@ -21,7 +21,7 @@ export class TradeService {
 
   /** GET trades from the server */
   getTrades(): Observable<TradeRecord[]> {
-    return this.http.get<TradeRecord[]>(this.tradeUrl)
+    return this.http.get<TradeRecord[]>(`${this.tradeUrl}GetAll`)
 
       //combine tap and catchError into one function
       .pipe(
@@ -52,7 +52,7 @@ export class TradeService {
       return of([]);
     }
 
-    return this.http.get<TradeRecord[]>(`${this.tradeUrl}/?pokemon=${term}`)
+    return this.http.get<TradeRecord[]>(`${this.tradeUrl}?pokemon=${term}`)
       .pipe(
         tap(x => x.length ?
           this.log(`found trade containing pokemon "${term}"`) :
@@ -67,7 +67,7 @@ export class TradeService {
       return of([]);
     }
 
-    return this.http.get<TradeRecord[]>(`${this.tradeUrl}/?offeredBy=${term}`)
+    return this.http.get<TradeRecord[]>(`${this.tradeUrl}GetByTradeId?tradeId=${term}`)
       .pipe(
         tap(x => x.length ?
           this.log(`found trade intiated by "${term}"`) :

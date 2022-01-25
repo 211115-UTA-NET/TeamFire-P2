@@ -1,6 +1,19 @@
-<div id="trade-history-component">
-  <h1>Pokemon Trade History</h1>
-               
-</div>
+<body>
+  <div id="trade-history-componenent">
+    <h2>Pokemon Trade History</h2>
 
-<button (click)="goBack()">Go back</button>
+
+    <ul class="search-result">
+      <li *ngFor="let trade of trades">
+        <a>{{trade.offeredBy}} traded a {{trade.pokemon}} to {{trade.redeemedBy}}</a>
+      </li>
+    </ul>
+  </div>
+  <nav class="topnav">
+    <a routerLink="/profile">Profile</a>
+    <a routerLink="/dashboard">Dashboard</a>
+    <a routerLink="/tradesearch">Trade Search</a>
+  </nav>
+
+ 
+</body>

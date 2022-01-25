@@ -10,24 +10,28 @@ import { Observable, Subject } from 'rxjs';
   styleUrls: ['./tradehistory.component.css'],
 })
 export class TradehistoryComponent implements OnInit {
-  constructor(private location: Location,
-              private tradeService: TradeService  ) { }
 
-  trades$!: Observable<TradeRecord[]>;
+  trades: TradeRecord[] = [];
+
+  constructor(private location: Location,
+              private tradeService: TradeService
+              ) { }
+
+  
 
   ngOnInit(): void
   {
-   // this.getTrades();
+    this.getTrades();
   }
   goBack(): void {
     this.location.back();
   }
 
-  /*getTrades(): void {
+  getTrades(): void {
 
     this.tradeService.getTrades()
       .subscribe(trades => this.trades = trades);
-  }*/
+  }
 
 
 

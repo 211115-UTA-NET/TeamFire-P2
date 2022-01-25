@@ -1,1 +1,20 @@
-<p>tradesearch works!</p>
+<body>
+  <div id="trade-search-componenent">
+    <h2>Search Pokemon Trades</h2>
+
+
+    <ul class="search-result">
+      <li *ngFor="let trade of trades$ | async ">
+        <a>{{trade.offeredBy}}</a>
+      </li>
+    </ul>
+  </div>
+  <nav class="topnav">
+    <a routerLink="/profile">Profile</a>
+    <a routerLink="/dashboard">Dashboard</a>
+    <a routerLink="/tradehistory">Trade History</a>
+  </nav>
+
+  <label for="search-box">Search for a Trade:</label>
+  <input #searchBox id="search-box" (input)="search(searchBox.value)" />
+</body>

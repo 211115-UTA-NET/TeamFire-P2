@@ -5,7 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
 import { CollectionComponent } from './collection/collection.component';
 import { TradehistoryComponent } from './tradehistory/tradehistory.component';
-
+import { TradesearchComponent } from './tradesearch/tradesearch.component';
 import { AuthGuard } from '@auth0/auth0-angular';
 
 const routes: Routes = [
@@ -38,6 +38,12 @@ const routes: Routes = [
     component: TradehistoryComponent,
     canActivate: [AuthGuard],
   },
+  {
+    path: 'tradesearch',
+    component: TradesearchComponent,
+    canActivate: [AuthGuard],
+  },
+
 ];
 
 @NgModule({
