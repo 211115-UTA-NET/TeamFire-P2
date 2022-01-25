@@ -2,3 +2,22 @@ body {
   padding-top: 130px;
   background-color: rgba(240, 248, 255, 0.692);
 }
+.userinfo {
+  margin: 10px;
+  color: rgb(250, 255, 202);
+  display: block;
+  background-color: rgba(0, 0, 0, 0.699);
+  padding: 1cm;
+  border-radius: 15px;
+  font-size: 20px;
+}
+table {
+  background-color: aliceblue;
+  border-radius: 15px;
+}
+td {
+  border: 3px solid rgb(255, 255, 255);
+  border-radius: 15px;
+  padding: 26px;
+  background-color: rgba(0, 0, 0, 0.699);
+}
