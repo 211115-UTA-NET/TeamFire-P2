@@ -10,7 +10,7 @@ using pokeApi.Models;
 
 namespace pokeApi.Controllers
 {
-    [Route("api/[controller]/[actions]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CardController : ControllerBase
     {
@@ -29,7 +29,8 @@ namespace pokeApi.Controllers
         }
 
         //============ GET CARDS BEIGN TRADED ===============//
-        [HttpGet]
+        [HttpGet("trading")]
+
         public async Task<IActionResult> GetTradeCardsAsync(
             //[FromQuery, Required]
             )
