@@ -1,28 +1,29 @@
 <body>
-    <div class="row" *ngFor="let user of dbUserInfo">
-        <div class="pgtitle">
-            <h1>{{user.userName}}'s Profile</h1>
-        </div>
-        <nav class="topnav">
-            <a (click)="goBack()">Home</a>
-            <a routerLink="/collection">My Pokemon Collection</a>
-            <a routerLink="/tradehistory">Trade history</a>
-        </nav>
-        <div class="userinfo">
-            <table>
-                <tr>
-                    <td>User name: </td>
-                    <td>{{ user.userName }}</td>
-                </tr>
-                <tr>
-                    <td>Account #: </td>
-                    <td>{{ user.userID }}</td>
-                </tr>
-                <tr>
-                    <td>E-mail:</td>
-                    <td> {{user.email}}</td>
-                </tr>
-            </table>
-        </div>
+  <div class="row" *ngFor="let user of dbUserInfo">
+    <div class="pgtitle">
+      <h1>{{user.userName}}'s Profile</h1>
     </div>
+    <nav class="topnav">
+      <a (click)="goBack()">Home</a>
+      <a routerLink="/collection">My Pokemon Collection</a>
+      <a routerLink="/tradehistory">Trade History</a>
+
+    </nav>
+    <div class="userinfo">
+      <table>
+        <tr>
+          <td>User name: </td>
+          <td>{{ user.userName }}</td>
+        </tr>
+        <tr>
+          <td>Account #: </td>
+          <td>{{ user.userID }}</td>
+        </tr>
+        <tr>
+          <td>E-mail:</td>
+          <td> {{user.email}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </body>

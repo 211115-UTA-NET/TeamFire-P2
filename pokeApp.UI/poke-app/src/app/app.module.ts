@@ -14,6 +14,7 @@ import { environment as env } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { TradesearchComponent } from './tradesearch/tradesearch.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     ProfileComponent,
     CollectionComponent,
     TradehistoryComponent,
+    TradesearchComponent,
   ],
   imports: [
     MatCardModule,
