@@ -12,7 +12,8 @@ import { CollectionComponent } from './collection/collection.component';
 import { TradehistoryComponent } from './tradehistory/tradehistory.component';
 import { HttpClientModule } from '@angular/common/http'
 import { HttpClient } from '@angular/common/http';
-import { TradeSearchComponent } from './trade-search/trade-search.component'
+import { TradeSearchComponent } from './trade-search/trade-search.component';
+import { UserComponent } from './user/user.component'
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { TradeSearchComponent } from './trade-search/trade-search.component'
     LogoutComponent,
     CollectionComponent,
     TradehistoryComponent,
-    TradeSearchComponent
+    TradeSearchComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

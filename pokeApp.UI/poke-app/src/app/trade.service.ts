@@ -10,7 +10,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class TradeService {
 
-  private tradeUrl = 'api/TradeRecord'
+  private tradeUrl = 'https://211115pokemonapp.azurewebsites.net/api/TradeRecord'
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })

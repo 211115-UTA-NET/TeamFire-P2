@@ -22,7 +22,7 @@ export class TradehistoryComponent implements OnInit {
 
   getTrades(): void {
     this.tradeService.getTrades()
-      .subscribe(trades => this.trades);
+      .subscribe(trades => this.trades = trades);
   }
   goBack(): void {
     this.location.back();
