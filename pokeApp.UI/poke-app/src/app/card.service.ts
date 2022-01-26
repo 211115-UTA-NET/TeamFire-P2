@@ -20,4 +20,10 @@ export class CardService {
     const url = `${this.cardUrl}/trading`;
     return lastValueFrom(this.http.get<Card[]>(url));
   }
+
+  GetUserCards(userid: number) {
+    const url = `${this.cardUrl}?userid=${userid}`;
+    // console.log(url);
+    return lastValueFrom(this.http.get<Card[]>(url));
+  }
 }
