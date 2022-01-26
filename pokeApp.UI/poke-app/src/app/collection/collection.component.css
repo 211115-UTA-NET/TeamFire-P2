@@ -19,7 +19,7 @@ mat-card-subtitle {
 
 .example-card {
   width: 70%;
-  height: 70%;
+  height: max-content;
   overflow: auto;
   border-radius: 15px;
   background-color: #fff;
