@@ -1,9 +1,5 @@
 <body>
     <h1 class="pgtitle">My Pokemon Collection</h1>
-    <nav class="topnav">
-        <a routerLink="/dashboard">Home</a>
-        <a (click)="goBack()">Go back</a>
-    </nav>
     <div *ngIf="!userCards">
         <h1>Your collection is Empty</h1>
     </div>

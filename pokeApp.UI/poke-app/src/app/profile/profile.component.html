@@ -5,9 +5,9 @@
     </div>
     <nav class="topnav">
       <a routerLink="/dashboard">Home</a>
-      <a routerLink="/collection">My Pokemon Collection</a>
+      <a (click)="toggle()">{{buttonName}}</a>
     </nav>
-    <div class="userinfo">
+    <div class="userinfo" *ngIf="isShow; else collection">
       <table>
         <tr>
           <td>User name: </td>
@@ -23,5 +23,8 @@
         </tr>
       </table>
     </div>
+    <ng-template #collection>
+      <app-collection></app-collection>
+    </ng-template>
   </div>
 </body>

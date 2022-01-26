@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
-import { CollectionComponent } from './collection/collection.component';
 import { TradehistoryComponent } from './tradehistory/tradehistory.component';
 import { TradesearchComponent } from './tradesearch/tradesearch.component';
 import { AuthGuard } from '@auth0/auth0-angular';
@@ -29,11 +28,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'collection',
-    component: CollectionComponent,
-    canActivate: [AuthGuard],
-  },
-  {
     path: 'tradehistory',
     component: TradehistoryComponent,
     canActivate: [AuthGuard],
@@ -43,7 +37,6 @@ const routes: Routes = [
     component: TradesearchComponent,
     canActivate: [AuthGuard],
   },
-
 ];
 
 @NgModule({

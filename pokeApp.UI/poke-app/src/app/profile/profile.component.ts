@@ -45,7 +45,14 @@ export class ProfileComponent implements OnInit {
       });
     });
   }
+  buttonName: string = 'My Pokemon Collection';
+  isShow: boolean = true;
   goBack(): void {
     this.location.back();
+  }
+  toggle(): void {
+    this.isShow = !this.isShow;
+    if (!this.isShow) this.buttonName = 'Profile';
+    else this.buttonName = 'My Pokemon Collection';
   }
 }
