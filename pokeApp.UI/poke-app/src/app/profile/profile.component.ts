@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit, Output } from '@angular/core';
 import { Location } from '@angular/common';
 import { AuthService } from '@auth0/auth0-angular';
 import { User } from '../User';
 import { UserService } from '../user.service';
 import { UserDto } from '../UserDto';
 
+@Injectable({
+  providedIn: 'root',
+})
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -16,6 +19,7 @@ export class ProfileComponent implements OnInit {
     public auth: AuthService,
     private userService: UserService
   ) {}
+
   dbUserInfo: User[] = [];
   ngOnInit(): void {
     // this.auth.user$.subscribe(
@@ -31,12 +35,13 @@ export class ProfileComponent implements OnInit {
         pw: 'psw',
         email: profile?.email,
       };
-      debugger;
+      // debugger;
       return this.userService.addUser(body).then((data) => {
-        console.log(data);
-        debugger;
+        // console.log(data);
+        // debugger;
         this.dbUserInfo = data;
-        debugger;
+        this.userService.userid = data[0].userID;
+        // debugger;
       });
     });
   }

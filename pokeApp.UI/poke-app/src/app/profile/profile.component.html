@@ -4,10 +4,8 @@
       <h1>{{user.userName}}'s Profile</h1>
     </div>
     <nav class="topnav">
-      <a (click)="goBack()">Home</a>
+      <a routerLink="/dashboard">Home</a>
       <a routerLink="/collection">My Pokemon Collection</a>
-      <a routerLink="/tradehistory">Trade History</a>
-
     </nav>
     <div class="userinfo">
       <table>

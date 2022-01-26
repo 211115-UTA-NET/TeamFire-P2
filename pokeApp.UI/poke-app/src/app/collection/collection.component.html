@@ -1,6 +1,20 @@
 <body>
     <h1 class="pgtitle">My Pokemon Collection</h1>
     <nav class="topnav">
+        <a routerLink="/dashboard">Home</a>
         <a (click)="goBack()">Go back</a>
     </nav>
+    <div *ngIf="!userCards">
+        <h1>Your collection is Empty</h1>
+    </div>
+    <div class="collection">
+        <mat-grid-list class="grid" cols="5" rowHeight="2:3">
+            <mat-grid-tile *ngFor="let card of userCards">
+                <mat-card class="example-card">
+                    <img mat-card-image src="../../assets/images/{{card.pokeID}}.png" alt="Photo of {{card.pokemon}}">
+                    <mat-card-title>#{{card.pokeID}} {{card.pokemon}}</mat-card-title>
+                </mat-card>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </div>
 </body>

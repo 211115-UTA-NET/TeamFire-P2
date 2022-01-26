@@ -169,6 +169,63 @@ namespace pokeApi.Data
             return result;
         }
 
+        //-----------------GENERATE NEW CARD -------------------------//
+        public async Task<IEnumerable<dtoCard>> GetNewRandCardAsync(int userId)
+        {
+            List<dtoCard> result = new List<dtoCard>();
+            int trade = 0;
+            System.Random rand = new System.Random();
+            int pokeid = rand.Next(1, 810);
+            int thisID = 0;
+            
+            using SqlConnection connection = new(_connectionString);
+            await connection.OpenAsync();
+            string cmdText = @"insert into poke.Cards ( userID, pokeID, trading)
+                            OUTPUT INSERTED.cardID  
+                                            values (@userId,@pokeID , @istrade );";
+            using SqlCommand cmd = new(cmdText, connection);
+            cmd.Parameters.AddWithValue("@userId", userId);
+            cmd.Parameters.AddWithValue("@istrade", trade);
+            cmd.Parameters.AddWithValue("@pokeID", pokeid);
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                thisID = (int)reader["cardID"];
+            }
+            Console.WriteLine(thisID);
+            await connection.CloseAsync();
+
+            //======== use new id to get card info ====//
+            using SqlConnection connection2 = new(_connectionString);
+            await connection2.OpenAsync();
+            string cmdText2 = @"
+            SELECT cardID,poke.Cards.userID,userName,poke.Cards.pokeID,pokemon,trading
+                        From poke.Cards 
+                        INNER JOIN poke.Dex ON poke.Cards.pokeID = poke.Dex.pokeID
+                        INNER JOIN poke.Users On poke.Cards.userID = poke.Users.userID
+                        WHERE poke.Cards.cardID = @newCardID;";
+            using SqlCommand cmd2 = new(cmdText2, connection2);
+            cmd2.Parameters.AddWithValue("@newCardID", thisID);
+            using SqlDataReader reader2 = await cmd2.ExecuteReaderAsync();
+
+            while (await reader2.ReadAsync())
+            {
+                int cardID = (int)reader2["cardID"];
+                int userID = (int)reader2["userID"];
+                string userName = reader2["userName"].ToString();
+                int pokeID = (int)reader2["pokeID"];
+                string pokemon = reader2["pokemon"].ToString();
+                int trading = (int)reader2["trading"];
+                result.Add(new(cardID, userID, userName, pokeID, pokemon, trading));
+                Console.WriteLine($"Pokemon's Name: {pokemon}\nCardID: {cardID}.");
+
+            }
+
+            await connection2.CloseAsync();
+            return result;
+
+        }
+
         //================== UPDATE CARD OWNER ======//
         public async Task<IEnumerable<dtoCard>> UpdateCardOwnerAsync(int newOwner, int cardId)
         {
@@ -227,10 +284,14 @@ namespace pokeApi.Data
             await connection.OpenAsync();
 
             using SqlCommand cmd = new(
-                        @"select poke.CompletedTrades.tradeID, o.userName as offeredBy, r.userName as redeemedBy
+                        @"select poke.CompletedTrades.tradeID, o.userName as offeredBy, r.userName as redeemedBy,
+                        poke.TradeDetail.cardId as cardId, poke.dex.pokemon
                         from poke.CompletedTrades
                         join poke.Users o on  poke.CompletedTrades.offeredBy = o.userID
                         join poke.Users r on  poke.CompletedTrades.redeemedBy = r.userID
+                        join poke.TradeDetail on poke.CompletedTrades.tradeID = poke.TradeDetail.tradeID
+                        join poke.Cards on poke.TradeDetail.cardId = poke.Cards.cardID
+                        join poke.dex on poke.Cards.pokeID = poke.dex.pokeID
                         where (o.userName = @sortID or r.userName = @sortID );",
                 connection);
 
@@ -241,10 +302,12 @@ namespace pokeApi.Data
             // get trx from db
             while (await reader.ReadAsync())
             {
-                string offeredBy = reader["offeredBy"].ToString()!;
                 int tradeID = (int)reader["tradeID"];
+                string offeredBy = reader["offeredBy"].ToString()!;
                 string redeemedBy = reader["redeemedBy"].ToString()!;
-                result.Add(new(tradeID, offeredBy, -1, redeemedBy,-1,-1,"",-1));
+                string pokemon = reader["pokemon"].ToString()!;
+                int cardID = (int)reader["cardId"]!;
+                result.Add(new(tradeID, offeredBy, -1, redeemedBy, -1, -1, pokemon, cardID));
                 Console.WriteLine($"Trade id: {tradeID} - \nInitiator :{redeemedBy} - Redeemer: {offeredBy}.");
 
 
@@ -263,11 +326,17 @@ namespace pokeApi.Data
             await connection.OpenAsync();
 
             using SqlCommand cmd = new(
-                        @"select poke.CompletedTrades.tradeID, o.userName as offeredBy, r.userName as redeemedBy
+                        @"select poke.CompletedTrades.tradeID, o.userName as offeredBy, r.userName as redeemedBy,
+                        poke.TradeDetail.cardId as cardId, poke.dex.pokemon
                         from poke.CompletedTrades
                         join poke.Users o on  poke.CompletedTrades.offeredBy = o.userID
-                        join poke.Users r on  poke.CompletedTrades.redeemedBy = r.userID;",
+                        join poke.Users r on  poke.CompletedTrades.redeemedBy = r.userID
+                        join poke.TradeDetail on poke.CompletedTrades.tradeID = poke.TradeDetail.tradeID
+                        join poke.Cards on poke.TradeDetail.cardId = poke.Cards.cardID
+                        join poke.dex on poke.Cards.pokeID = poke.dex.pokeID
+                        ",
                 connection);
+
 
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
@@ -277,7 +346,9 @@ namespace pokeApi.Data
                 int tradeID = (int)reader["tradeID"];
                 string offeredBy = reader["offeredBy"].ToString()!;
                 string redeemedBy = reader["redeemedBy"].ToString()!;
-                result.Add(new(tradeID, offeredBy, -1, redeemedBy, -1, -1, "", -1));
+                string pokemon = reader["pokemon"].ToString()!;
+                int cardID = (int)reader["cardId"]!;
+                result.Add(new(tradeID, offeredBy, -1, redeemedBy, -1, -1, pokemon, cardID));
                 Console.WriteLine($"Trade id: {tradeID} - \nInitiator :{redeemedBy} - Redeemer: {offeredBy}.");
 
             }
@@ -295,11 +366,15 @@ namespace pokeApi.Data
             await connection.OpenAsync();
 
             using SqlCommand cmd = new(
-                        @"select poke.TradeDetail.tradeID, p.pokemon as cardID, o.userName
-                    from poke.TradeDetail
-                    join poke.Dex p on poke.TradeDetail.cardID = p.pokeID
-                    join poke.Users o on  poke.TradeDetail.userID = o.userID
-                    where tradeID = @sortId;",
+                        @"select poke.CompletedTrades.tradeID, o.userName as offeredBy, r.userName as redeemedBy, 
+                        poke.TradeDetail.cardId as cardId, poke.dex.pokemon
+                        from poke.CompletedTrades
+                        join poke.Users o on  poke.CompletedTrades.offeredBy = o.userID
+                        join poke.Users r on  poke.CompletedTrades.redeemedBy = r.userID
+                        join poke.TradeDetail on poke.CompletedTrades.tradeID = poke.TradeDetail.tradeID
+                        join poke.Cards on poke.TradeDetail.cardId = poke.Cards.cardID
+                        join poke.dex on poke.Cards.pokeID = poke.dex.pokeID
+                        where poke.TradeDetail.tradeID = @sortId;",
                 connection);
 
             cmd.Parameters.AddWithValue("@sortId", tradeId);
@@ -310,12 +385,11 @@ namespace pokeApi.Data
             while (await reader.ReadAsync())
             {
                 int tradeID = (int)reader["tradeID"];
-                string pokemon = reader["cardID"].ToString()!;
-                string offeredBy = reader["userName"].ToString()!;
-                result.Add(new(tradeID,offeredBy,-1,"",-1,-1, pokemon, -1));
-                Console.WriteLine($"{offeredBy} traded {pokemon}.");
-
-
+                string offeredBy = reader["offeredBy"].ToString()!;
+                string redeemedBy = reader["redeemedBy"].ToString()!;
+                string pokemon = reader["pokemon"].ToString()!;
+                int cardID = (int)reader["cardId"]!;
+                result.Add(new(tradeID, offeredBy, -1, redeemedBy, -1, -1, pokemon, cardID));
             }
             await connection.CloseAsync();
             return result;
