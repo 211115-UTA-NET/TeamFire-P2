@@ -3,22 +3,21 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { TradeRecord } from './TradeRecord';
+import { Card } from './Card';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TradeService {
-  private tradeUrl = 'https://211115pokemonapp.azurewebsites.net/api/trade'; // URL to web api
+export class CardService {
+  private cardUrl = 'https://211115pokemonapp.azurewebsites.net/api/card'; // URL to web api
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
   constructor(private http: HttpClient) {}
 
-  GetTradeInfo() {
-    // GET
-    const url = `${this.tradeUrl}/getall`;
-    return lastValueFrom(this.http.get<TradeRecord[]>(url));
+  GetTradableCards() {
+    const url = `${this.cardUrl}/trading`;
+    return lastValueFrom(this.http.get<Card[]>(url));
   }
 }
