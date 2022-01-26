@@ -14,8 +14,8 @@ import {
   HttpParamsOptions,
 } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
-import { TradeRecord } from '../TradeRecord';
-import { TradeService } from '../trade.service';
+import { CardService } from '../card.service';
+import { Card } from '../Card';
 @Injectable({
   providedIn: 'root',
 })
@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
     @Inject(DOCUMENT) private doc: Document,
     private renderer: Renderer2,
     private http: HttpClient,
-    private tradeService: TradeService
+    private cardService: CardService
   ) {}
   profileJson: string = '';
   /**
@@ -38,15 +38,15 @@ export class DashboardComponent implements OnInit {
    * Compiler will provide autocomplete properties,
    * but will not give an error if you forgot to add the properties
    **/
-  trades: TradeRecord[] = [];
+  tradableCards: Card[] = [];
   params: any;
   ngOnInit(): void {
-    this.GetTrades();
+    this.GetTradableCards();
   }
 
-  GetTrades(): void {
-    this.tradeService.GetTradeInfo().then((data) => {
-      this.trades = data;
+  GetTradableCards(): void {
+    this.cardService.GetTradableCards().then((data) => {
+      this.tradableCards = data;
     });
   }
 
