@@ -263,11 +263,16 @@ namespace pokeApi.Data
             await connection.OpenAsync();
 
             using SqlCommand cmd = new(
-                        @"select poke.CompletedTrades.tradeID, o.userName as offeredBy, r.userName as redeemedBy
+                        @"select poke.CompletedTrades.tradeID, o.userName as offeredBy, r.userName as redeemedBy, poke.TradeDetail.cardId, poke.dex.pokemon
                         from poke.CompletedTrades
                         join poke.Users o on  poke.CompletedTrades.offeredBy = o.userID
-                        join poke.Users r on  poke.CompletedTrades.redeemedBy = r.userID;",
+                        join poke.Users r on  poke.CompletedTrades.redeemedBy = r.userID
+                        join poke.TradeDetail on poke.CompletedTrades.tradeID = poke.TradeDetail.tradeID
+                        join poke.Cards on poke.TradeDetail.cardId = poke.Cards.cardID
+                        join poke.dex on poke.Cards.pokeID = poke.dex.pokeID
+                        ",
                 connection);
+
 
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
@@ -277,7 +282,9 @@ namespace pokeApi.Data
                 int tradeID = (int)reader["tradeID"];
                 string offeredBy = reader["offeredBy"].ToString()!;
                 string redeemedBy = reader["redeemedBy"].ToString()!;
-                result.Add(new(tradeID, offeredBy, -1, redeemedBy, -1, -1, "", -1));
+                string pokemon = reader["pokemon"].ToString()!;
+                int cardID = (int)reader["cardId"]!;
+                result.Add(new(tradeID, offeredBy, -1, redeemedBy, -1, -1, pokemon, cardID));
                 Console.WriteLine($"Trade id: {tradeID} - \nInitiator :{redeemedBy} - Redeemer: {offeredBy}.");
 
             }
