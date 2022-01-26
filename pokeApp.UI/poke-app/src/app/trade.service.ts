@@ -11,7 +11,7 @@ import { MessageService } from './message.service'
   providedIn: 'root',
 })
 export class TradeService {
-  private tradeUrl = 'https://211115pokemonapp.azurewebsites.net/api/trade/'; // URL to web api
+  private tradeUrl = 'https://211115pokemonapp.azurewebsites.net/api/trade'; // URL to web api
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
