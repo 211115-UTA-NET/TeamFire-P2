@@ -30,6 +30,8 @@ html {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  position: relative;
+  background-attachment: fixed;
 }
 .pgtitle {
   margin-left: 36px;
