@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { TradeService } from '../trade.service'
-import { TradeRecord } from '../TradeRecord'
+import { TradeService } from '../trade.service';
+import { TradeRecord } from '../TradeRecord';
 import { Observable, Subject } from 'rxjs';
 
 @Component({
@@ -10,17 +10,11 @@ import { Observable, Subject } from 'rxjs';
   styleUrls: ['./tradehistory.component.css'],
 })
 export class TradehistoryComponent implements OnInit {
-
   trades: TradeRecord[] = [];
 
-  constructor(private location: Location,
-              private tradeService: TradeService
-              ) { }
+  constructor(private location: Location, private tradeService: TradeService) {}
 
-  
-
-  ngOnInit(): void
-  {
+  ngOnInit(): void {
     this.getTrades();
   }
   goBack(): void {
@@ -28,13 +22,6 @@ export class TradehistoryComponent implements OnInit {
   }
 
   getTrades(): void {
-
-    this.tradeService.getTrades()
-      .subscribe(trades => this.trades = trades);
+    this.tradeService.getTrades().subscribe((trades) => (this.trades = trades));
   }
-
-
-
-
-
 }
