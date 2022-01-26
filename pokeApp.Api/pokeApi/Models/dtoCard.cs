@@ -9,9 +9,9 @@ namespace pokeApi.Models
         public string userName { get; set; }
         public int pokeID { get; set; }
         public string pokemon { get; set; }
-		public int trading { get; set; }
+		public int? trading { get; set; }
 
-        public dtoCard(int cardID, int userID, string userName, int pokeID, string pokemon, int trading)
+        public dtoCard(int cardID, int userID, string userName, int pokeID, string pokemon, int? trading)
         {
             this.cardID = cardID;
             this.userID = userID;

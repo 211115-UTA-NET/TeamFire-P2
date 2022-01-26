@@ -1,4 +1,7 @@
-﻿using pokeApi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using pokeApi.Data;
+using pokiApi.DataInfrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 /** 
@@ -18,7 +21,27 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IRepository>(repository);
+builder.Services.AddDbContext<P2SQLTeamFireContext>(options =>
+{
+    // logging to console is on by default?
+    options.UseSqlServer(connectionString);
+});
+
+
+
+if (builder.Configuration.GetValue<string>("UseEf") == "true")
+{
+    // because the context is scoped lifetime, the other service that needs it (EfRepository)
+    //   also needs to be scoped lifetime (or transient).
+    // (don't need a delegate here to tell it how to make the class, it can figure it out in this case
+    builder.Services.AddScoped<IRepository, EfRepository>();
+}
+else
+{
+    // "if anyone asks for an IRepository, run this lambda expression"
+    // (uses a service provider parameter to grab another dependency it needs, from the same DI container)
+    builder.Services.AddSingleton<IRepository>(repository);
+}
 
 builder.Services.AddCors(options =>
 {
