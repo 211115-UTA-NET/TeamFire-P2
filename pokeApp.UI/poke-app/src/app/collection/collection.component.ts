@@ -5,6 +5,7 @@ import { ProfileComponent } from '../profile/profile.component';
 import { Card } from '../Card';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../user.service';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-collection',
@@ -20,6 +21,7 @@ export class CollectionComponent implements OnInit {
   ) {}
   userCards: Card[] = [];
   userid: number = 0;
+  isTradable = false;
   ngOnInit(): void {
     this.GetUserCards();
     this.userid = this.routeInfo.snapshot.queryParams['id'];
@@ -33,5 +35,9 @@ export class CollectionComponent implements OnInit {
     this.cardService.GetUserCards(this.userService.userid).then((data) => {
       this.userCards = data;
     });
+  }
+  IsTradable(trading: number): boolean {
+    if (trading == 1) return true;
+    else return false;
   }
 }

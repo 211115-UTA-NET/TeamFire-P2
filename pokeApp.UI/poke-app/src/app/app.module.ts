@@ -15,7 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { TradesearchComponent } from './tradesearch/tradesearch.component';
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,6 +32,7 @@ import { TradesearchComponent } from './tradesearch/tradesearch.component';
     AppRoutingModule,
     HttpClientModule,
     MatGridListModule,
+    MatSlideToggleModule,
     AuthModule.forRoot({
       ...env.auth,
     }),
