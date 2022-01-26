@@ -7,13 +7,6 @@ import {
 } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { DOCUMENT } from '@angular/common';
-import { User } from '../User';
-import {
-  HttpClient,
-  HttpParams,
-  HttpParamsOptions,
-} from '@angular/common/http';
-import { lastValueFrom } from 'rxjs';
 import { CardService } from '../card.service';
 import { Card } from '../Card';
 @Injectable({
@@ -28,8 +21,6 @@ export class DashboardComponent implements OnInit {
   constructor(
     public auth: AuthService,
     @Inject(DOCUMENT) private doc: Document,
-    private renderer: Renderer2,
-    private http: HttpClient,
     private cardService: CardService
   ) {}
   profileJson: string = '';

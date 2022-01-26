@@ -16,6 +16,7 @@ export class UserService implements OnInit {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
+  userid: number = -1;
   ngOnInit(): void {}
 
   addUser(userInfo: UserDto) {
