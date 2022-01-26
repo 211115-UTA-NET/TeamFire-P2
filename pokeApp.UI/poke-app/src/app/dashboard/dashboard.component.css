@@ -24,7 +24,7 @@ mat-card-subtitle {
 
 .example-card {
   width: 70%;
-  height: 70%;
+  height: max-content;
   overflow: auto;
   border-radius: 15px;
   background-color: #fff;
@@ -56,11 +56,15 @@ mat-card-subtitle {
   box-shadow: 0 9px black;
 }
 
-.example-card mat-card-actions .button:hover {
+mat-card-actions {
+  padding: 0;
+}
+
+mat-card-actions .button:hover {
   background-color: #8400ff;
 }
 
-.example-card mat-card-actions .button:active {
+mat-card-actions .button:active {
   background-color: #8400ff;
   box-shadow: 0 5px black;
   transform: translateY(4px);
