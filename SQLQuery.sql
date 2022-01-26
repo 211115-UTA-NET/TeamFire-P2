@@ -10,9 +10,11 @@ CREATE TABLE poke.Users (
 
 
 CREATE TABLE poke.Dex(
-    pokeID INT NOT NULL PRIMARY KEY,
+    pokeID INT NOT NULL IDENTITY PRIMARY KEY,
     pokemon NVARCHAR(255) NOT NULL,
 );
+
+drop table poke.Dex
 
 CREATE TABLE poke.Cards(
     cardID INT NOT NULL IDENTITY PRIMARY KEY,
@@ -37,6 +39,8 @@ CREATE TABLE poke.TradeDetail(
 
 ALTER TABLE poke.Cards ADD CONSTRAINT FK_User_ID 
     FOREIGN KEY (userID) REFERENCES poke.Users(userID);
+
+Alter table poke.Cards drop CONSTRAINT FK_Poke_ID
 
 ALTER TABLE poke.Cards ADD CONSTRAINT FK_Poke_ID 
     FOREIGN KEY (pokeID) REFERENCES poke.Dex(pokeID);
