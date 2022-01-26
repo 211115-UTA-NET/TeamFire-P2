@@ -9,6 +9,13 @@
                 <mat-card class="example-card">
                     <img mat-card-image src="../../assets/images/{{card.pokeID}}.png" alt="Photo of {{card.pokemon}}">
                     <mat-card-title>#{{card.pokeID}} {{card.pokemon}}</mat-card-title>
+                    <div class="trading">In Trading:</div>
+                    <mat-card-actions>
+                        <label class="switch">
+                            <input type="checkbox" [checked]="card.trading" onclick="return false">
+                            <span class="slider round"></span>
+                        </label>
+                    </mat-card-actions>
                 </mat-card>
             </mat-grid-tile>
         </mat-grid-list>
