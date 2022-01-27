@@ -17,5 +17,7 @@ namespace pokeApi.Data
         Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int tradeId, int cardId, int offeredByID);
         bool CheckTradable(int cardId);
         Task<int> AddTradeRequest(int cardID, int userID, int offerCardID);
+        Task<IEnumerable<Requests>> GetSendRequest(int userid);
+        Task<IEnumerable<Requests>> GetReceivedRequest(int userid);
     }
 }

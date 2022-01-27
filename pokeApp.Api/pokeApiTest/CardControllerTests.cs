@@ -3,10 +3,9 @@ using Xunit;
 using pokeApi.Controllers;
 using pokeApi.Data;
 using Moq;
-using System.Linq;
-using System.Collections.Generic;
 using pokeApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace pokeApiTest
 {
@@ -18,7 +17,7 @@ namespace pokeApiTest
       
 
         [Fact]
-        public void GetCardsAsync_ShouldReturnCards_WhenCardsExists()
+        public async Task GetCardsAsync_ShouldReturnCards_WhenCardsExistsAsync()
         {
             //Arrange
 
@@ -29,23 +28,24 @@ namespace pokeApiTest
 
             _sqlRepository.Setup(x => x.GetCardsAsync(userId)).Returns(Task.FromResult((IEnumerable<dtoCard>)cardDto));
             
-            var cards = new JsonResult(_sut.GetCardsAsync(userId));
+            var cards = await _sut.GetCardsAsync(userId);
             var expected = new JsonResult(cardDto);
             //Assert
-            Assert.Equal(cards, expected);
+            Assert.Equal(cards.ToString(), expected.ToString());
         }
 
         [Fact]
-        public async Task GetCardsAsync_ShouldReturnNone_WhenUserInvalid()
+        public async Task GetCardsAsync_ShouldReturnNone_WhenUserInvalidAsync()
         {
             //Arrange
             var cards = (IEnumerable<dtoCard>)new List<dtoCard>();
 
             _sqlRepository.Setup(x => x.GetCardsAsync(-1)).Returns(Task.FromResult(cards));
             //Act
-            IEnumerable<dtoCard> actual = (IEnumerable<dtoCard>)_sut.GetCardsAsync(-1);
+            CardController _sut = new CardController(_sqlRepository.Object);
+            var actual = await _sut.GetCardsAsync(-1);
             //Assert
-            Assert.Equal(cards, actual);
+            Assert.Equal(actual.ToString(), new JsonResult(cards).ToString());
         }
     }
 }

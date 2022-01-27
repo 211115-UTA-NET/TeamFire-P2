@@ -284,5 +284,58 @@ namespace pokeApi.Data
         {
             return _context.Cards.Any(card => card.CardId == cardId && card.Trading == 1);
         }
+
+        public async Task<IEnumerable<Requests>> GetSendRequest(int userid)
+        {
+            var result =  await (
+                from tr in _context.TradeRequests
+                join owner in _context.Cards on tr.CardId equals owner.CardId
+                join dex in _context.Dices on owner.PokeId equals dex.PokeId
+                where tr.UserId == userid
+                select new
+                {
+                    requestid = tr.RequestId,
+                    cardid = tr.CardId,
+                    userid = tr.UserId,
+                    offercardid = tr.OfferCardId,
+                    pokeid = owner.PokeId,
+                    pokemon = dex.Pokemon
+                }).ToListAsync();
+
+            List<Requests> records = new();
+
+            foreach(var request in result)
+            {
+                records.Add(new(request.requestid, request.cardid, request.pokeid, request.pokemon, request.userid, request.offercardid));
+            }
+            return records;
+        }
+
+        public async Task<IEnumerable<Requests>> GetReceivedRequest(int userid)
+        {
+            var result = await(
+               from tr in _context.TradeRequests
+               join c in _context.Cards on tr.OfferCardId equals c.CardId
+               join owner in _context.Cards on tr.CardId equals owner.CardId
+               join dex in _context.Dices on c.PokeId equals dex.PokeId
+               where owner.UserId == userid
+               select new
+               {
+                   requestid = tr.RequestId,
+                   cardid = tr.CardId,
+                   userid = tr.UserId,
+                   offercardid = tr.OfferCardId,
+                   pokeid = owner.PokeId,
+                   pokemon = dex.Pokemon
+               }).ToListAsync();
+
+            List<Requests> records = new();
+
+            foreach (var request in result)
+            {
+                records.Add(new(request.requestid, request.cardid, request.pokeid, request.pokemon, request.userid, request.offercardid));
+            }
+            return records;
+        }
     }
 }

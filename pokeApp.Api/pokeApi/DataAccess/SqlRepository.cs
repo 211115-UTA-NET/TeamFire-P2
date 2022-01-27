@@ -464,6 +464,16 @@ namespace pokeApi.Data
         {
             throw new NotImplementedException();
         }
+
+        public Task<IEnumerable<Requests>> GetSendRequest(int userid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Requests>> GetReceivedRequest(int userid)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
