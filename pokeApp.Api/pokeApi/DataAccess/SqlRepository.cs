@@ -16,7 +16,7 @@ namespace pokeApi.Data
         }
 
         //============== Get User===========//
-        public async Task<IEnumerable<dtoUser>> GetUsersAsync(string name, string useremail)
+        public async Task<IEnumerable<dtoUser>> GetUsersAsync(string name, string email)
         {
             List<dtoUser> result = new List<dtoUser>();
             /**
@@ -30,11 +30,11 @@ namespace pokeApi.Data
             await connection.OpenAsync();
             
             using SqlCommand cmd = new(
-                        @"SELECT * FROM poke.Users WHERE userName=@sortName AND email=@useremail;",
+                        @"SELECT * FROM poke.Users WHERE userName=@sortName AND email=@email;",
                 connection);
 
             cmd.Parameters.AddWithValue("@sortName", name);
-            cmd.Parameters.AddWithValue("@useremail", useremail);
+            cmd.Parameters.AddWithValue("@email", email);
 
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
@@ -44,9 +44,9 @@ namespace pokeApi.Data
                 int ID = (int)reader["userID"];
                 string Name = reader["userName"].ToString()!;
                 string pw = reader["password"].ToString()!;
-                string email = reader["email"].ToString()!;
+                string readEmail = reader["email"].ToString()!;
 
-                result.Add(new( ID, Name, pw, email));
+                result.Add(new( ID, Name, pw, readEmail));
                 Console.WriteLine($"{Name}'s userID: {ID}");
 
             }
