@@ -25,10 +25,10 @@ namespace pokeApiTest
        public async Task GetAllByNameAsync_ShouldReturnUsers_WhenTheyExist()
         {
             //Arange
-            var name = "Benjamin";
+            var name = "benjamin";
             var email = "test@gmail.com";
             var userDto = new List<dtoUser>();
-            userDto.Add(new(1, "Benjamin", "test", "test@gmail.com"));
+            userDto.Add(new(1, "benjamin", "test", "test@gmail.com"));
 
             _sqlRepository.Setup(x => x.GetUsersAsync(name, email)).Returns(Task.FromResult((IEnumerable<dtoUser>)userDto));
 
