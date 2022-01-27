@@ -1,12 +1,14 @@
 <body>
   <div class="row" *ngFor="let user of dbUserInfo">
-    <div class="pgtitle">
-      <h1>{{user.userName}}'s Profile</h1>
-    </div>
-    <nav class="topnav">
+
+    <!-- <nav class="topnav">
       <a routerLink="/dashboard">Home</a>
       <a (click)="toggle()">{{buttonName}}</a>
-    </nav>
+    </nav> -->
+    <button class='switch-btn' (click)="toggle()">{{buttonName}}</button>
+    <div class="pgtitle" [hidden]="isShow">
+      <h1>My Pokemon Collection</h1>
+    </div>
     <div class="userinfo" *ngIf="isShow; else collection">
       <table>
         <tr>
@@ -24,7 +26,7 @@
       </table>
     </div>
     <ng-template #collection>
-      <app-collection></app-collection>
+      <app-collection [userCards]=userCards></app-collection>
     </ng-template>
   </div>
 </body>

@@ -41,7 +41,7 @@ mat-card-subtitle {
   background-size: cover;
 }
 
-.example-card mat-card-actions .button {
+.button {
   display: inline-block;
   padding: 10px 25px;
   font-size: 24px;
@@ -60,12 +60,46 @@ mat-card-actions {
   padding: 0;
 }
 
-mat-card-actions .button:hover {
+.button:hover {
   background-color: #8400ff;
 }
 
-mat-card-actions .button:active {
+.button:active {
   background-color: #8400ff;
   box-shadow: 0 5px black;
   transform: translateY(4px);
+}
+
+.close-btn {
+  display: inline-block;
+  padding: 10px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #6d6d6d;
+  border: none;
+  border-radius: 15px;
+}
+.close-btn:hover {
+  background-color: #242424;
+}
+
+.close-btn:active {
+  background-color: #242424;
+  transform: translateY(4px);
+}
+
+.select-list {
+  padding: 3px;
+  margin: 10px;
+  border-radius: 15px;
+  font-size: 26px;
+}
+.miniwindow {
+  font-size: 30px;
+  font-weight: bold;
+  color: #0e0e0e;
 }

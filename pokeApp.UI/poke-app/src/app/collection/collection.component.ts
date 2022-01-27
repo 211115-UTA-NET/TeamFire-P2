@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { CardService } from '../card.service';
 import { ProfileComponent } from '../profile/profile.component';
@@ -19,23 +19,21 @@ export class CollectionComponent implements OnInit {
     private routeInfo: ActivatedRoute,
     private userService: UserService
   ) {}
-  userCards: Card[] = [];
-  userid: number = 0;
+  @Input() userCards: Card[] = [];
   isTradable = false;
   ngOnInit(): void {
-    this.GetUserCards();
-    this.userid = this.routeInfo.snapshot.queryParams['id'];
+    // this.GetUserCards();
     console.log(this.routeInfo.snapshot);
   }
   goBack(): void {
     this.location.back();
   }
-  GetUserCards() {
-    console.log(this.userService.userid);
-    this.cardService.GetUserCards(this.userService.userid).then((data) => {
-      this.userCards = data;
-    });
-  }
+  // GetUserCards() {
+  //   console.log(this.userService.userid);
+  //   this.cardService.GetUserCards(this.userService.userid).then((data) => {
+  //     this.userCards = data;
+  //   });
+  // }
   IsTradable(trading: number): boolean {
     if (trading == 1) return true;
     else return false;
