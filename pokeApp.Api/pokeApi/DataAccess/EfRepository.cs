@@ -331,7 +331,8 @@ namespace pokeApi.Data
                 {
                     CardId = cardID,
                     UserId = userID,
-                    OfferCardId = offerCardID
+                    OfferCardId = offerCardID,
+                    Status = "pending"
                 };
                 await _context.TradeRequests.AddAsync(request);
                 result = await _context.SaveChangesAsync();
@@ -377,14 +378,17 @@ namespace pokeApi.Data
                     userid = tr.UserId,
                     offercardid = tr.OfferCardId,
                     pokeid = owner.PokeId,
-                    pokemon = dex.Pokemon
+                    pokemon = dex.Pokemon,
+                    status = tr.Status,
+                    date = tr.Timestamp
                 }).ToListAsync();
 
             List<Requests> records = new();
 
             foreach(var request in result)
             {
-                records.Add(new(request.requestid, request.cardid, request.pokeid, request.pokemon, request.userid, request.offercardid));
+                records.Add(new(request.requestid, request.cardid, request.pokeid, request.pokemon, 
+                    request.userid, request.offercardid, request.status, request.date.ToString()));
             }
             return records;
         }
@@ -404,14 +408,17 @@ namespace pokeApi.Data
                    userid = tr.UserId,
                    offercardid = tr.OfferCardId,
                    pokeid = owner.PokeId,
-                   pokemon = dex.Pokemon
+                   pokemon = dex.Pokemon,
+                   status = tr.Status,
+                   date = tr.Timestamp
                }).ToListAsync();
 
             List<Requests> records = new();
 
             foreach (var request in result)
             {
-                records.Add(new(request.requestid, request.cardid, request.pokeid, request.pokemon, request.userid, request.offercardid));
+                records.Add(new(request.requestid, request.cardid, request.pokeid, request.pokemon,
+                    request.userid, request.offercardid, request.status, request.date.ToString()));
             }
             return records;
         }

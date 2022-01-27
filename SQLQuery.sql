@@ -75,7 +75,8 @@ ALTER TABLE poke.TradeRequest ADD CONSTRAINT TR_FK_user_ID
 ALTER TABLE poke.TradeRequest ADD CONSTRAINT TR_FK_offer_card_ID 
     FOREIGN KEY (offerCardID) REFERENCES poke.Cards(cardID);
 
-
+Alter table poke.TradeRequest ADD status NVARCHAR(255) NOT NULL;
+Alter table poke.TradeRequest ADD Timestamp DATETIMEOFFSET NOT NULL DEFAULT (SYSDATETIMEOFFSET())
 
 select * from poke.Users;
 SELECT * FROM poke.Cards;
@@ -87,20 +88,20 @@ select * from poke.TradeDetail;
 select * from poke.Dex;
 
 
-delete from poke.TradeRequest where requestID =3
+delete from poke.TradeRequest where requestID =9
 
 select * from poke.Cards where cardID=1 AND trading=1
 
 -- user receive the trade requests from other user
-select requestID, tr.cardID, tr.userID, offerCardID, c.pokeID, dex.pokemon
+select requestID, tr.cardID, tr.userID, offerCardID, c.pokeID, dex.pokemon, status, Timestamp
 from poke.TradeRequest as tr 
 join poke.Cards as c on tr.offerCardID = c.cardID 
 join poke.Cards as owner on tr.cardID = owner.cardID
 join poke.Dex as dex on c.pokeID = dex.pokeID
-where owner.userID=5
+where owner.userID=4
 
 -- user send the trade requests to card owner
-select requestID, tr.cardID, tr.userID, offerCardID, owner.pokeID, dex.pokemon, 
+select requestID, tr.cardID, tr.userID, offerCardID, owner.pokeID, dex.pokemon, status, Timestamp
 from poke.TradeRequest as tr
 join poke.Cards as owner on tr.cardID = owner.cardID
 join poke.Dex as dex on owner.pokeID = dex.pokeID
