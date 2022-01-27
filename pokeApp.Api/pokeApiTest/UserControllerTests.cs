@@ -21,8 +21,8 @@ namespace pokeApiTest
             _sut = new UserController(_sqlRepository.Object);
         }
 
-       [Fact]
-       public async Task GetAllByNameAsync_ShouldReturnUsers_WhenTheyExist()
+        [Fact]
+        public async Task GetAllByNameAsync_ShouldReturnUsers_WhenTheyExist()
         {
             //Arange
             var name = "benjamin";
@@ -39,5 +39,29 @@ namespace pokeApiTest
 
             Assert.Equal(expected.ToString(), users.ToString());
         }
+
+
+     /*   [Fact]
+
+        public async Task AddNewUser_Should_AddUser()
+        {
+            var name = "benjamin";
+            var email = "test@gmail.com";
+            var password = "test";
+            var userId = 1;
+
+            var userDto = new List<dtoUser>();
+            userDto.Add(new dtoUser(userId, name, password, email));
+
+            _sqlRepository.Setup(x => x.AddNewUserAsync(name, password, email)).Returns(Task.FromResult((IEnumerable<dtoUser>)userDto));
+
+
+            var users = await _sut.AddNewUserAsync(new dtoAddUser(name, password, email));
+            var expected = new JsonResult(userDto);
+
+            Assert.Equal(expected.ToString(), users.ToString());
+        }
+*/
     }
+
 }
