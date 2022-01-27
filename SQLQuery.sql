@@ -20,7 +20,7 @@ CREATE TABLE poke.Cards(
     cardID INT NOT NULL IDENTITY PRIMARY KEY,
     userID INT NOT NULL,
 	pokeID INT NOT NULL,
-    trading BIT DEFAULT 0,
+    trading BIT DEFAULT NOT NULL 0,
 );
 
 CREATE TABLE poke.CompletedTrades (
@@ -36,6 +36,8 @@ CREATE TABLE poke.TradeDetail(
 	cardID INT NOT NULL,
 	userID INT NOT NULL
 )
+
+
 
 ALTER TABLE poke.Cards ADD CONSTRAINT FK_User_ID 
     FOREIGN KEY (userID) REFERENCES poke.Users(userID);
@@ -57,11 +59,42 @@ ALTER TABLE poke.TradeDetail ADD CONSTRAINT FK_trade_ID
 ALTER TABLE poke.TradeDetail ADD CONSTRAINT FK_card_ID 
     FOREIGN KEY (cardID) REFERENCES poke.Cards(cardID);
 
+CREATE TABLE poke.TradeRequest(
+	requestID INT NOT NULL IDENTITY PRIMARY KEY,
+	cardID INT NOT NULL,
+	userID INT NOT NULL,
+	offerCardID INT NOT NULL
+)
+
+ALTER TABLE poke.TradeRequest ADD CONSTRAINT TR_FK_card_ID 
+    FOREIGN KEY (cardID) REFERENCES poke.Cards(cardID);
+
+ALTER TABLE poke.TradeRequest ADD CONSTRAINT TR_FK_user_ID 
+    FOREIGN KEY (userID) REFERENCES poke.Users(userID);
+
+ALTER TABLE poke.TradeRequest ADD CONSTRAINT TR_FK_offer_card_ID 
+    FOREIGN KEY (offerCardID) REFERENCES poke.Cards(cardID);
+
+
 select * from poke.Users;
 SELECT * FROM poke.Cards;
+
+select * from poke.TradeRequest;
 SELECT * FROM poke.CompletedTrades;
 select * from poke.TradeDetail;
+
 select * from poke.Dex;
+
+select * from poke.Cards where cardID=1 AND trading=1
+select requestID, tr.cardID, tr.userID, offerCardID from poke.TradeRequest as tr join poke.Cards as c on tr.cardID = c.cardID where c.userID=5
+
+SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [poke].[Cards] AS [c]
+              WHERE ([c].[cardID] = 5) AND ([c].[trading] = 1)) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+END
 
 UPDATE poke.Cards 
 SET userID = 3

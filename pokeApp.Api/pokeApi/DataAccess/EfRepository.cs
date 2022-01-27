@@ -260,5 +260,29 @@ namespace pokeApi.Data
             });
 
         }
+        // ------------------- Trade Request ----------------------
+
+        // return number of rows affected, if already there then return zero row affected
+        public async Task<int> AddTradeRequest(int cardID, int userID, int offerCardID)
+        {
+            int result = 0;
+            if (!(await _context.TradeRequests.AnyAsync(tr => tr.CardId == cardID && tr.UserId == userID)))
+            {
+                var request = new TradeRequest
+                {
+                    CardId = cardID,
+                    UserId = userID,
+                    OfferCardId = offerCardID
+                };
+                await _context.TradeRequests.AddAsync(request);
+                result = await _context.SaveChangesAsync();
+            }
+            return result;
+        }
+
+        public bool CheckTradable(int cardId)
+        {
+            return _context.Cards.Any(card => card.CardId == cardId && card.Trading == 1);
+        }
     }
 }

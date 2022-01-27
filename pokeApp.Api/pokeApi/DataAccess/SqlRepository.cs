@@ -455,6 +455,15 @@ namespace pokeApi.Data
             return result;
         }
 
+        public bool CheckTradable(int cardId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> AddTradeRequest(int cardID, int userID, int offerCardID)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
