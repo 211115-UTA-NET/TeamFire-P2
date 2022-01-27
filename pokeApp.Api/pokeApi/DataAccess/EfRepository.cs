@@ -49,6 +49,9 @@ namespace pokeApi.Data
             return newID;
         }
 
+        
+        
+
         public async Task<IEnumerable<dtoCard>> CheckCardOwner(int cardId)
         {
 
@@ -336,7 +339,24 @@ namespace pokeApi.Data
             return result;
         }
 
-        
+        public async Task<int> UpdateTradeStatus(int requestID, string requestStatus)
+        {
+            int x = 0;
+            var result = _context.TradeRequests.SingleOrDefault(c => c.RequestId == requestID);
+            if (result != null)
+            {
+                result.Status = requestStatus;
+                x = await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            return x;
+
+        }
+
+
 
         public bool CheckTradable(int cardId)
         {

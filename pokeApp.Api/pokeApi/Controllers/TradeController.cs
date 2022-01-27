@@ -90,5 +90,14 @@ namespace pokeApi.Controllers
             IEnumerable<Requests> record = await _repository.GetReceivedRequest(userid);
             return new JsonResult(record);
         }
+
+        [HttpPut]
+        [ActionName("UpdateStatus")]
+        public async Task<IActionResult> UpdateTradeStatus([FromBody, Required] dtoRequestUpdate status)
+        {
+            int result = await _repository.UpdateTradeStatus(status.RequestID , status.RequestStatus);
+            return new JsonResult(result);
+        }
+
     }
 }

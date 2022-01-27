@@ -132,6 +132,12 @@ namespace pokiApi.DataInfrastructure
 
                 entity.Property(e => e.OfferCardId).HasColumnName("offerCardID");
 
+                entity.Property(e => e.Status)
+                    .HasMaxLength(255)
+                    .HasColumnName("status");
+
+                entity.Property(e => e.Timestamp).HasDefaultValueSql("(sysdatetimeoffset())");
+
                 entity.Property(e => e.UserId).HasColumnName("userID");
 
                 entity.HasOne(d => d.Card)

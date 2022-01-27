@@ -487,6 +487,12 @@ namespace pokeApi.Data
             throw new NotImplementedException();
 
         }
+
+        public Task<int> UpdateTradeStatus(int requestID, string requestStatus)
+        {
+            throw new NotImplementedException();
+
+        }
     }
 
 
