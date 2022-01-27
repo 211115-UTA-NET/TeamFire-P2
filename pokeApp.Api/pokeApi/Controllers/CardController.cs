@@ -31,9 +31,8 @@ namespace pokeApi.Controllers
         //============ GET CARDS BEING TRADED ===============//
         [HttpGet("trading")]
 
-        public async Task<IActionResult> GetTradeCardsAsync(
+        public async Task<IActionResult> GetTradeCardsAsync()
             //[FromQuery, Required]
-            )
         {
             IEnumerable<dtoCard> Cards = await _repository.GetTradeCardsAsync();
             return new JsonResult(Cards);
