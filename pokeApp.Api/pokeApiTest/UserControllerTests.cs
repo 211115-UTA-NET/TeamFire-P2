@@ -6,6 +6,7 @@ using Moq;
 using System.Linq;
 using System.Collections.Generic;
 using pokeApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace pokeApiTest
 {
@@ -20,21 +21,23 @@ namespace pokeApiTest
             _sut = new UserController(_sqlRepository.Object);
         }
 
-        [Fact]
-        public async Task GetAllByNameAsync_ShouldReturnUsers_WhenTheyExist()
+       [Fact]
+       public async Task GetAllByNameAsync_ShouldReturnUsers_WhenTheyExist()
         {
-            ////Arange
-            //var name = "Benjamin";
-            //var email = "test@gmail.com";
-            //var userDto = new dtoUser(1, "Benjamin", "test", "test@gmail.com");
+            //Arange
+            var name = "Benjamin";
+            var email = "test@gmail.com";
+            var userDto = new List<dtoUser>();
+            userDto.Add(new(1, "Benjamin", "test", "test@gmail.com"));
 
-            //await _sqlRepository.Setup(x => x.GetUsersAsync(name, email)).ReturnsAsync(userDto);
+            _sqlRepository.Setup(x => x.GetUsersAsync(name, email)).Returns(Task.FromResult((IEnumerable<dtoUser>)userDto));
 
-            ////Act
-            //IEnumerable<dtoUser> users = (IEnumerable<dtoUser>)_sut.GetAllByNameAsync(name, email);
-            ////Assert
+            //Act
+            var users = await _sut.GetAllByNameAsync(name, email);
+            var expected = new JsonResult(userDto);
+            //Assert
 
-            //Assert.Equal(userDto, users);
+            Assert.Equal(userDto.ToString(), users.ToString());
         }
     }
 }

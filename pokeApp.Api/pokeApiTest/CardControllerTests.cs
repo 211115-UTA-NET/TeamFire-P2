@@ -11,23 +11,25 @@ namespace pokeApiTest
 {
     public class CardControllerTests
     {
-        
+        private readonly CardController _sut;
         private readonly Mock<IRepository> _sqlRepository = new Mock<IRepository>();
         
+        public CardControllerTests()
+        {
+            _sut = new CardController(_sqlRepository.Object);
+        }
       
 
         [Fact]
-        public async Task GetCardsAsync_ShouldReturnCards_WhenCardsExistsAsync()
+        public async Task GetCardsAsync_ShouldReturnCards_WhenCardsExists()
         {
             //Arrange
-
-            CardController _sut = new CardController(_sqlRepository.Object);
             var userId = 4;
             var cardDto = new List<dtoCard>();
             cardDto.Add(new(1, 4, "ben", 151, "Mew", 1));
 
             _sqlRepository.Setup(x => x.GetCardsAsync(userId)).Returns(Task.FromResult((IEnumerable<dtoCard>)cardDto));
-            
+            //Act
             var cards = await _sut.GetCardsAsync(userId);
             var expected = new JsonResult(cardDto);
             //Assert
@@ -42,10 +44,22 @@ namespace pokeApiTest
 
             _sqlRepository.Setup(x => x.GetCardsAsync(-1)).Returns(Task.FromResult(cards));
             //Act
-            CardController _sut = new CardController(_sqlRepository.Object);
             var actual = await _sut.GetCardsAsync(-1);
             //Assert
             Assert.Equal(actual.ToString(), new JsonResult(cards).ToString());
         }
+        /*[Fact]
+        public async Task UpdateCardOwnerAsync_ShouldUpdateOwner_WhenUserInvalid()
+        {
+            //Arrange
+            var cardDto = new List<dtoCard>();
+            cardDto.Add(new(1, 4, "ben", 151, "Mew", 1));
+
+            _sqlRepository.Setup(x => x.UpdateCardOwnerAsync(4, 1)).Returns(Task.FromResult());
+            //Act
+            var actual = await _sut.GetCardsAsync(-1);
+            //Assert
+            Assert.Equal(actual.ToString(), new JsonResult(cards).ToString());
+        }*/
     }
 }
