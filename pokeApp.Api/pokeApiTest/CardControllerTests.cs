@@ -61,5 +61,59 @@ namespace pokeApiTest
             //Assert
             Assert.Equal(actual.ToString(), new JsonResult(cards).ToString());
         }*/
+
+        [Fact]
+        public async Task GetTradeCardsAsync_ShouldGetTradeableCards()
+        {
+            //Arrange
+            var userId = 4;
+            var cardDto = new List<dtoCard>();
+            cardDto.Add(new(1, 4, "ben", 151, "Mew", 1));
+
+            _sqlRepository.Setup(x => x.GetTradeCardsAsync()).Returns(Task.FromResult((IEnumerable<dtoCard>)cardDto));
+            //Act
+
+            var actual = await _sut.GetTradeCardsAsync();
+            var expected = new JsonResult(cardDto);
+            //Assert
+            Assert.Equal(actual.ToString(), expected.ToString());
+        }
+        [Fact]
+        public async Task UpdateCardOwnerAsync_ShouldUpdateCardOwner()
+        {
+            //Arrange
+            var userId = 4;
+            var cardId = 1;
+            var cardDto = new List<dtoCard>();
+            cardDto.Add(new(1, 4, "ben", 151, "Mew", 1));
+
+            _sqlRepository.Setup(x => x.UpdateCardOwnerAsync(userId, cardId)).Returns(Task.FromResult((IEnumerable<dtoCard>)cardDto));
+            //Act
+
+            var actual = await _sut.UpdateCardOwnerAsync(new dtoUpdateCard());
+            var expected = new JsonResult(cardDto);
+            //Assert
+            Assert.Equal(actual.ToString(), expected.ToString());
+        }
+        [Fact]
+        public async Task GetNewRandCardAsync_ShouldAddNewCard()
+        {
+            //Arrange
+            var userId = 4;
+            var cardId = 1;
+            var cardDto = new List<dtoCard>();
+            cardDto.Add(new(1, 4, "ben", 151, "Mew", 1));
+
+            _sqlRepository.Setup(x => x.GetNewRandCardAsync(userId)).Returns(Task.FromResult((IEnumerable<dtoCard>)cardDto));
+            //Act
+
+            var actual = await _sut.GetNewRandCardAsync(new dtoNewCard());
+            var expected = new JsonResult(cardDto);
+            //Assert
+            Assert.Equal(actual.ToString(), expected.ToString());
+        }
+
     }
+
+    
 }
