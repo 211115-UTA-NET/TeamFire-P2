@@ -456,17 +456,13 @@ namespace pokeApi.Data
             return result;
         }
 
-<<<<<<< HEAD
-        public async Task<IEnumerable<dtoCard>> toggelTrading(int cardId)
-=======
+
+
         public bool CheckTradable(int cardId)
->>>>>>> 86cd6af306ff721a5df0d970ced509697b2967b5
         {
             throw new NotImplementedException();
         }
 
-<<<<<<< HEAD
-=======
         public Task<int> AddTradeRequest(int cardID, int userID, int offerCardID)
         {
             throw new NotImplementedException();
@@ -481,7 +477,11 @@ namespace pokeApi.Data
         {
             throw new NotImplementedException();
         }
->>>>>>> 86cd6af306ff721a5df0d970ced509697b2967b5
+
+        public Task<IEnumerable<dtoCard>> toggelTrading(int cardId)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

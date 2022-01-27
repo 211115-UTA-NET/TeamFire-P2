@@ -272,12 +272,12 @@ namespace pokeApi.Data
             });
 
         }
-<<<<<<< HEAD
+
 
         public async Task<IEnumerable<dtoCard>> toggelTrading(int cardId)
         {
-            var result = _context.Cards.SingleOrDefault(c => c.CardId == cardId);
-            if (result.Trading != 1)
+            var result = await _context.Cards.SingleOrDefaultAsync(c => c.CardId == cardId);
+            if (result!.Trading != 1)
             {
                 result.Trading = 1;
                 await _context.SaveChangesAsync();
@@ -301,7 +301,7 @@ namespace pokeApi.Data
 
         }
 
-=======
+
         // ------------------- Trade Request ----------------------
 
         // return number of rows affected, if already there then return zero row affected
@@ -379,6 +379,6 @@ namespace pokeApi.Data
             }
             return records;
         }
->>>>>>> 86cd6af306ff721a5df0d970ced509697b2967b5
+
     }
 }
