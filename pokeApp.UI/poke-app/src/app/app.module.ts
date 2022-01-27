@@ -8,6 +8,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
 import { CollectionComponent } from './collection/collection.component';
 import { TradehistoryComponent } from './tradehistory/tradehistory.component';
+import { ModalModule } from './_modal';
 
 import { AuthModule } from '@auth0/auth0-angular';
 import { environment as env } from '../environments/environment';
@@ -16,6 +17,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { TradesearchComponent } from './tradesearch/tradesearch.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSelectModule } from '@angular/material/select';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,11 +30,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   ],
   imports: [
     MatCardModule,
+    ModalModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     MatGridListModule,
     MatSlideToggleModule,
+    MatSelectModule,
     AuthModule.forRoot({
       ...env.auth,
     }),
