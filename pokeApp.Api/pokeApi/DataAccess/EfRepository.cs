@@ -49,6 +49,20 @@ namespace pokeApi.Data
             return newID;
         }
 
+        public async Task<IEnumerable<dtoCard>> CheckCardOwner(int cardId)
+        {
+
+            var cards = await _context.Cards
+               .Include(card => card.Poke)
+               .Include(card => card.User)
+               .Where(card => card.CardId == cardId)
+               .ToListAsync();
+            return cards.Select(card =>
+            {
+                return new dtoCard(card.CardId, card.UserId, card.User.UserName, card.PokeId, card.Poke.Pokemon, card.Trading);
+            });
+        }
+
 
 
 
@@ -321,6 +335,8 @@ namespace pokeApi.Data
             }
             return result;
         }
+
+        
 
         public bool CheckTradable(int cardId)
         {
