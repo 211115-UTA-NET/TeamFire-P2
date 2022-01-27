@@ -5,6 +5,16 @@ using System.Linq;
 
 namespace pokeApi.Data
 {
+
+    public abstract class RandomNumberGenerator : IDisposable
+    {
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class EfRepository : IRepository
     {
         private readonly P2SQLTeamFireContext _context;
@@ -16,43 +26,49 @@ namespace pokeApi.Data
             _logger = logger;
         }
 
-
-        public async Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int offeredByID, int recevedByID)
+        //Might be redundant - not sure what to return here
+        //should probably return nothing here
+        //or at the very least not show return values
+        //===================================AddNewRecordAsync=====//
+        public async Task<int> AddNewRecordAsync(int offeredByID, int recevedByID)
         {
 
-            CompletedTrade td = new CompletedTrade
+            var newTrade = new CompletedTrade
             {
                 OfferedBy = offeredByID,
                 RedeemedBy = recevedByID
 
             };
-            await _context.CompletedTrades.AddAsync(td);
+
+            await _context.AddAsync(newTrade);
             await _context.SaveChangesAsync();
 
+            int newID =   _context.CompletedTrades.Select(r => r.TradeId).Max();
 
-            var trades = await _context.CompletedTrades
-                 .Include(trade => trade.TradeId)
-                 .Include(trade => trade.OfferedByNavigation.UserName)
-                 .Include(trade => trade.RedeemedByNavigation.UserName)
-                 .Include(trade => trade.TradeDetails)
-                 .ThenInclude(TradeDetail => TradeDetail.CardId)
-                 .Include(trade => trade.TradeDetails)
-                 .ThenInclude(TradeDetail => TradeDetail.Card.Poke.Pokemon)
-                 .ToListAsync();
 
-            return trades.Select(trade =>
-            {
-                return new dtoTradeRecord(
-                    trade.TradeId, trade.OfferedByNavigation.UserName, -1, trade.RedeemedByNavigation.UserName, -1, -1, "1", 1
-                    );
-            });
+            return newID;
         }
 
+
+
+
+        //==============AddNewDetailedRecordAsync=============
         public async Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int tradeId, int cardId, int offeredByID)
         {
-            throw new NotImplementedException();
-        }
+            var newrecord = new TradeDetail
+            {
+                TradeId = tradeId,
+                CardId = cardId,
+                UserId = offeredByID
+            };
 
+            await _context.AddAsync(newrecord);
+            await _context.SaveChangesAsync();
+
+            return await GetRecentTradesAsync(tradeId);
+
+        }
+        
         public async Task<IEnumerable<dtoUser>> AddNewUserAsync(string name, string pw, string email)
         {
             bool ifExist = await _context.Users.AnyAsync(user => user.UserName == name && user.Email == email);
@@ -87,8 +103,11 @@ namespace pokeApi.Data
             });
         }
 
+        //================assign random card to player======//
+        // tried to return card with the highest cardID but could not do it
         public async Task<IEnumerable<dtoCard>> GetNewRandCardAsync(int userId)
         {
+            //RandomNumberGenerator;
             System.Random rand = new System.Random();
             int pokeid = rand.Next(1, 810);
             int thisID = 0;
@@ -100,21 +119,13 @@ namespace pokeApi.Data
                 Trading = thisID
             };
             var result = _context.Cards.AddAsync(card);
+            await _context.SaveChangesAsync();
 
-
-            var cards = await _context.Cards
-                .Include(card => card.Poke)
-                .Include(card => card.User)
-                .Where(card => card.UserId == userId)
-                .ToListAsync();
-            return cards.Select(card =>
-            {
-                return new dtoCard(card.CardId, card.UserId, card.User.UserName, card.PokeId, card.Poke.Pokemon, card.Trading);
-            });
-
+            return await  GetCardsAsync(userId);
 
 
         }
+
 
         public async Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(string name)
         {
@@ -245,6 +256,7 @@ namespace pokeApi.Data
             if (result != null)
             {
                 result.UserId = userId;
+                result.Trading = 0;
                 await _context.SaveChangesAsync();
             }
 
@@ -260,6 +272,36 @@ namespace pokeApi.Data
             });
 
         }
+<<<<<<< HEAD
+
+        public async Task<IEnumerable<dtoCard>> toggelTrading(int cardId)
+        {
+            var result = _context.Cards.SingleOrDefault(c => c.CardId == cardId);
+            if (result.Trading != 1)
+            {
+                result.Trading = 1;
+                await _context.SaveChangesAsync();
+            }else
+            {
+                result.Trading = 0;
+                await _context.SaveChangesAsync();
+
+            }
+
+            var result2 = await _context.Cards
+               .Include(card => card.Poke)
+               .Include(card => card.User)
+               .Where(card => card.CardId == cardId)
+               .ToListAsync();
+
+            return result2.Select(card =>
+            {
+                return new dtoCard(card.CardId, card.UserId, card.User.UserName, card.PokeId, card.Poke.Pokemon, card.Trading);
+            });
+
+        }
+
+=======
         // ------------------- Trade Request ----------------------
 
         // return number of rows affected, if already there then return zero row affected
@@ -337,5 +379,6 @@ namespace pokeApi.Data
             }
             return records;
         }
+>>>>>>> 86cd6af306ff721a5df0d970ced509697b2967b5
     }
 }

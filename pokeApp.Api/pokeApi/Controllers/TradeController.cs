@@ -40,23 +40,21 @@ namespace pokeApi.Controllers
             return new JsonResult(Records);
         }
 
-
-
         //==============POST==============///
         [HttpPost]
         [ActionName("AddTradeDetail")]
-        public async Task<IActionResult> AddNewRecordAsync([FromQuery, Required] int tradeId, [Required] int cardId, [Required] int offeredId)
+        public async Task<IActionResult> AddNewRecordAsync([FromBody, Required] dtoAddDetail tradeDetail)
         {
-            IEnumerable<dtoTradeRecord> record = await _repository.AddNewRecordAsync(tradeId, cardId, offeredId);
+            IEnumerable<dtoTradeRecord> record = await _repository.AddNewRecordAsync(tradeDetail.tradeId, tradeDetail.cardId, tradeDetail.offeredId);
             return new JsonResult(record);
         }
-
         [HttpPost]
         [ActionName("AddCompletedTrade")]
-        public async Task<IActionResult> AddNewRecordAsync([FromQuery, Required] int offeredByID, [Required] int recevedByID)
+        public async Task<IActionResult> AddNewRecordAsync([FromBody, Required] dtoAddTrade newTrade)
         {
-            IEnumerable<dtoTradeRecord> record = await _repository.AddNewRecordAsync(offeredByID, recevedByID);
-            return new JsonResult(record);
+            //IEnumerable<dtoTradeRecord> record = await _repository.AddNewRecordAsync(offeredByID, recevedByID);
+            int newTradeID = await _repository.AddNewRecordAsync(newTrade.offeredByID, newTrade.recevedByID);
+            return new JsonResult(newTradeID);
         }
 
         // ------------------- Trade Request ----------------------

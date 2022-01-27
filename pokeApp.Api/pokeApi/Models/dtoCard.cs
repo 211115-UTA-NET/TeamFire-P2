@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace pokeApi.Models
 {
 	public class dtoCard
@@ -19,6 +20,11 @@ namespace pokeApi.Models
             this.pokeID = pokeID;
             this.pokemon = pokemon;
             this.trading = trading;
+        }
+
+        public static explicit operator dtoCard(Task<IEnumerable<dtoCard>> v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

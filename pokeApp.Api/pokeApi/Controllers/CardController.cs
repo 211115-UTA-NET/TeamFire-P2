@@ -40,17 +40,26 @@ namespace pokeApi.Controllers
 
         //==============POST==============//
         [HttpPost("NewCard")]
-        public async Task<IActionResult> GetNewRandCardAsync([FromBody, Required] int userId)
+        public async Task<IActionResult> GetNewRandCardAsync([FromBody, Required] dtoNewCard card)
         {
-            IEnumerable<dtoCard> Cards = await _repository.GetNewRandCardAsync(userId);
+            IEnumerable<dtoCard> Cards = await _repository.GetNewRandCardAsync(card.userId);
             return new JsonResult(Cards);
         }
 
         [HttpPut("updateOwner")]
-        public async Task<IActionResult> UpdateCardOwnerAsync([FromQuery, Required] int userId, [Required] int cardId)
+        public async Task<IActionResult> UpdateCardOwnerAsync([FromBody, Required] dtoUpdateCard info )
         {
-            IEnumerable<dtoCard> Cards = await _repository.UpdateCardOwnerAsync(userId, cardId);
+            IEnumerable<dtoCard> Cards = await _repository.UpdateCardOwnerAsync(info.userId, info.cardId);
             return new JsonResult(Cards);
+
+        }
+
+        [HttpPut("toggleTradable")]
+        public async Task<IActionResult> toggelTrading([FromBody, Required] dtoToggle Id)
+        {
+            IEnumerable<dtoCard> Cards = await _repository.toggelTrading(Id.cardId);
+            return new JsonResult(Cards);
+
         }
     }
 }

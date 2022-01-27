@@ -9,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
  *      Uses Teamfire db connection string from Azure App Service when push to github.
  *      Uses kareem's db coonection string when run locally (can change the connection string in secrets)
  */
-string connectionString = builder.Configuration.GetConnectionString("Poke-DB-Connection");
+//string connectionString = builder.Configuration.GetConnectionString("Poke-DB-Connection");
+string connectionString = "Server=tcp:p2-sql-teamfire.database.windows.net,1433;Initial Catalog=P2-SQL-TeamFire;Persist Security Info=False;User ID=SQLDBADMIN;Password=Teamfire!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
 IRepository repository = new SqlRepository(connectionString);
 
