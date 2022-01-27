@@ -56,5 +56,39 @@ namespace pokeApi.Controllers
             int newTradeID = await _repository.AddNewRecordAsync(newTrade.offeredByID, newTrade.recevedByID);
             return new JsonResult(newTradeID);
         }
+
+        // ------------------- Trade Request ----------------------
+
+        [HttpGet]
+        [ActionName("isTradable")]
+        public bool CheckTradable([FromQuery, Required] int cardId)
+        {
+            bool result = _repository.CheckTradable(cardId);
+            return result;
+        }
+
+        [HttpPost]
+        [ActionName("tradeRequest")]
+        public async Task<int> AddTradeRequest([FromBody, FromQuery] dtoRequest request)
+        {
+            int result = await _repository.AddTradeRequest(request.cardID, request.userID, request.offerCardID);
+            return result;
+        }
+
+        [HttpGet]
+        [ActionName("sendrequest")]
+        public async Task<IActionResult> GetSendRequest([FromQuery, Required] int userid)
+        {
+            IEnumerable<Requests> record = await _repository.GetSendRequest(userid);
+            return new JsonResult(record);
+        }
+
+        [HttpGet]
+        [ActionName("receivedrequest")]
+        public async Task<IActionResult> GetReceivedRequest([FromQuery, Required] int userid)
+        {
+            IEnumerable<Requests> record = await _repository.GetReceivedRequest(userid);
+            return new JsonResult(record);
+        }
     }
 }
