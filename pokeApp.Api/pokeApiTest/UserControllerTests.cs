@@ -37,7 +37,7 @@ namespace pokeApiTest
             var expected = new JsonResult(userDto);
             //Assert
 
-            Assert.Equal(userDto.ToString(), users.ToString());
+            Assert.Equal(expected.ToString(), users.ToString());
         }
     }
 }
