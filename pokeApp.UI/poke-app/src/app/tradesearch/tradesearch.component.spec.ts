@@ -18,7 +18,11 @@ describe('TradesearchComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
+  logout(): void {
+    console.log(this.doc.location);
+    this.auth.logout({ returnTo: this.doc.location.origin });
+    alert('Successfully logout!');
+  }
   it('should create', () => {
     expect(component).toBeTruthy();
   });
