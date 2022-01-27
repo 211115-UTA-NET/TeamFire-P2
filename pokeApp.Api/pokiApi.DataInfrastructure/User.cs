@@ -10,6 +10,7 @@ namespace pokiApi.DataInfrastructure
             Cards = new HashSet<Card>();
             CompletedTradeOfferedByNavigations = new HashSet<CompletedTrade>();
             CompletedTradeRedeemedByNavigations = new HashSet<CompletedTrade>();
+            TradeRequests = new HashSet<TradeRequest>();
         }
 
         public int UserId { get; set; }
@@ -20,5 +21,6 @@ namespace pokiApi.DataInfrastructure
         public virtual ICollection<Card> Cards { get; set; }
         public virtual ICollection<CompletedTrade> CompletedTradeOfferedByNavigations { get; set; }
         public virtual ICollection<CompletedTrade> CompletedTradeRedeemedByNavigations { get; set; }
+        public virtual ICollection<TradeRequest> TradeRequests { get; set; }
     }
 }

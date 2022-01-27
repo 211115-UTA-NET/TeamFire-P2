@@ -15,78 +15,250 @@ namespace pokeApi.Data
             _context = context;
             _logger = logger;
         }
-        public Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int offeredByID, int recevedByID)
+
+
+        public async Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int offeredByID, int recevedByID)
+        {
+
+            CompletedTrade td = new CompletedTrade
+            {
+                OfferedBy = offeredByID,
+                RedeemedBy = recevedByID
+
+            };
+            await _context.CompletedTrades.AddAsync(td);
+            await _context.SaveChangesAsync();
+
+
+            var trades = await _context.CompletedTrades
+                 .Include(trade => trade.TradeId)
+                 .Include(trade => trade.OfferedByNavigation.UserName)
+                 .Include(trade => trade.RedeemedByNavigation.UserName)
+                 .Include(trade => trade.TradeDetails)
+                 .ThenInclude(TradeDetail => TradeDetail.CardId)
+                 .Include(trade => trade.TradeDetails)
+                 .ThenInclude(TradeDetail => TradeDetail.Card.Poke.Pokemon)
+                 .ToListAsync();
+
+            return trades.Select(trade =>
+            {
+                return new dtoTradeRecord(
+                    trade.TradeId, trade.OfferedByNavigation.UserName, -1, trade.RedeemedByNavigation.UserName, -1, -1, "1", 1
+                    );
+            });
+        }
+
+        public async Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int tradeId, int cardId, int offeredByID)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int tradeId, int cardId, int offeredByID)
+        public async Task<IEnumerable<dtoUser>> AddNewUserAsync(string name, string pw, string email)
         {
-            throw new NotImplementedException();
-        }
+            bool ifExist = await _context.Users.AnyAsync(user => user.UserName == name && user.Email == email);
+            if (!ifExist)
+            {
+                var newUser = new User
+                {
+                    UserName = name,
+                    Password = pw,
+                    Email = email
+                };
 
-        public Task<IEnumerable<dtoUser>> AddNewUserAsync(string name, string pw, string Email)
-        {
-            throw new NotImplementedException();
-        }
+                await _context.AddAsync(newUser);
+                await _context.SaveChangesAsync();
 
+            }
+            return await GetUsersAsync(name, email);
+
+        }
+        //---------------------------//
         public async Task<IEnumerable<dtoCard>> GetCardsAsync(int userId)
         {
-            //throw new NotImplementedException();
-            //using SqlCommand cmd = new(
-            //            @"SELECT cardID,poke.Cards.userID,userName,poke.Cards.pokeID,pokemon,trading
-            //            From poke.Cards 
-            //            INNER JOIN poke.Dex ON poke.Cards.pokeID = poke.Dex.pokeID
-            //            INNER JOIN poke.Users On poke.Cards.userID = poke.Users.userID
-            //            WHERE poke.Cards.userID = @sortID;",
 
-            //connection);
-            var cards = await _context.Cards        // From poke.Cards
-                .Include(card => card.Poke)         // INNER JOIN poke.Dex -> Dex = Poke
-                .Include(card=>card.User)           // INNER JOIN poke.Users
-                .Where(card=>card.UserId==userId)   // WHERE poke.Cards.userID = @sortID;
+            var cards = await _context.Cards
+                .Include(card => card.Poke)
+                .Include(card => card.User)
+                .Where(card => card.UserId == userId)
                 .ToListAsync();
-
-            // SELECT cardID,poke.Cards.userID,userName,poke.Cards.pokeID,pokemon,trading
             return cards.Select(card =>
             {
                 return new dtoCard(card.CardId, card.UserId, card.User.UserName, card.PokeId, card.Poke.Pokemon, card.Trading);
             });
         }
 
-        public Task<IEnumerable<dtoCard>> GetNewRandCardAsync(int userId)
+        public async Task<IEnumerable<dtoCard>> GetNewRandCardAsync(int userId)
         {
-            throw new NotImplementedException();
+            System.Random rand = new System.Random();
+            int pokeid = rand.Next(1, 810);
+            int thisID = 0;
+            var card = new Card
+            {
+
+                UserId = userId,
+                PokeId = pokeid,
+                Trading = thisID
+            };
+            var result = _context.Cards.AddAsync(card);
+
+
+            var cards = await _context.Cards
+                .Include(card => card.Poke)
+                .Include(card => card.User)
+                .Where(card => card.UserId == userId)
+                .ToListAsync();
+            return cards.Select(card =>
+            {
+                return new dtoCard(card.CardId, card.UserId, card.User.UserName, card.PokeId, card.Poke.Pokemon, card.Trading);
+            });
+
+
+
         }
 
-        public Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(string name)
+        public async Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(string name)
         {
-            throw new NotImplementedException();
+
+            List<dtoTradeRecord> records2 = new();
+            var trades = await (
+               from records in _context.CompletedTrades
+               join o in _context.Users on records.OfferedBy equals o.UserId
+               join r in _context.Users on records.RedeemedBy equals r.UserId
+               join dets in _context.TradeDetails on records.TradeId equals dets.TradeId
+               join crd in _context.Cards on dets.CardId equals crd.CardId
+               join dex in _context.Dices on crd.PokeId equals dex.PokeId
+               where o.UserName == name || r.UserName == name
+               select new
+               {
+                   tradeID = records.TradeId,
+                   offeredBy = o.UserName,
+                   offeredByID = records.OfferedBy,
+                   redeemedBy = r.UserName,
+                   redeemedByID = records.RedeemedBy,
+                   pokeID = dex.PokeId,
+                   pokemon = dex.Pokemon,
+                   cardId = dets.CardId
+               }).ToListAsync();
+
+            foreach (var Trade in trades)
+            {
+                records2.Add(new dtoTradeRecord(Trade.tradeID, Trade.offeredBy, Trade.offeredByID, Trade.redeemedBy, Trade.redeemedByID, Trade.pokeID, Trade.pokemon, Trade.cardId
+                    ));
+            }
+            return records2;
         }
 
-        public Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(int tradeId)
+        public async Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(int tradeId)
         {
-            throw new NotImplementedException();
+
+            List<dtoTradeRecord> records2 = new();
+            var trades = await (
+               from records in _context.CompletedTrades
+               join o in _context.Users on records.OfferedBy equals o.UserId
+               join r in _context.Users on records.RedeemedBy equals r.UserId
+               join dets in _context.TradeDetails on records.TradeId equals dets.TradeId
+               join crd in _context.Cards on dets.CardId equals crd.CardId
+               join dex in _context.Dices on crd.PokeId equals dex.PokeId
+               where records.TradeId == tradeId
+               select new
+               {
+                   tradeID = records.TradeId,
+                   offeredBy = o.UserName,
+                   offeredByID = records.OfferedBy,
+                   redeemedBy = r.UserName,
+                   redeemedByID = records.RedeemedBy,
+                   pokeID = dex.PokeId,
+                   pokemon = dex.Pokemon,
+                   cardId = dets.CardId
+               }).ToListAsync();
+
+            foreach (var Trade in trades)
+            {
+                records2.Add(new dtoTradeRecord(Trade.tradeID, Trade.offeredBy, Trade.offeredByID, Trade.redeemedBy, Trade.redeemedByID, Trade.pokeID, Trade.pokemon, Trade.cardId
+                    ));
+            }
+            return records2;
         }
 
-        public Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync()
+        public async Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync()
         {
-            throw new NotImplementedException();
+            List<dtoTradeRecord> records2 = new();
+            var trades = await (
+               from records in _context.CompletedTrades
+               join o in _context.Users on records.OfferedBy equals o.UserId
+               join r in _context.Users on records.RedeemedBy equals r.UserId
+               join dets in _context.TradeDetails on records.TradeId equals dets.TradeId
+               join crd in _context.Cards on dets.CardId equals crd.CardId
+               join dex in _context.Dices on crd.PokeId equals dex.PokeId
+               select new
+               {
+                   tradeID = records.TradeId,
+                   offeredBy = o.UserName,
+                   offeredByID = records.OfferedBy,
+                   redeemedBy = r.UserName,
+                   redeemedByID = records.RedeemedBy,
+                   pokeID = dex.PokeId,
+                   pokemon = dex.Pokemon,
+                   cardId = dets.CardId
+               }).ToListAsync();
+
+            foreach (var Trade in trades)
+            {
+                records2.Add(new dtoTradeRecord(Trade.tradeID, Trade.offeredBy, Trade.offeredByID, Trade.redeemedBy, Trade.redeemedByID, Trade.pokeID, Trade.pokemon, Trade.cardId
+                    ));
+            }
+            return records2;
         }
 
-        public Task<IEnumerable<dtoCard>> GetTradeCardsAsync()
+        public async Task<IEnumerable<dtoCard>> GetTradeCardsAsync()
         {
-            throw new NotImplementedException();
+
+            var cards = await _context.Cards
+                .Include(card => card.Poke)
+                .Include(card => card.User)
+                .Where(card => card.Trading == 1)
+                .ToListAsync();
+
+            return cards.Select(card =>
+            {
+                return new dtoCard(card.CardId, card.UserId, card.User.UserName, card.PokeId, card.Poke.Pokemon, card.Trading);
+            });
         }
 
-        public Task<IEnumerable<dtoUser>> GetUsersAsync(string name, string email)
+        public async Task<IEnumerable<dtoUser>> GetUsersAsync(string name, string email)
         {
-            throw new NotImplementedException();
+            var ppls = await _context.Users
+                .Where(ppl => ppl.UserName == name && ppl.Email == email)
+                .ToListAsync();
+
+            return ppls.Select(ppl =>
+            {
+                return new dtoUser(ppl.UserId, ppl.UserName, "pw", "email");
+            });
         }
 
-        public Task<IEnumerable<dtoCard>> UpdateCardOwnerAsync(int userId, int cardId)
+        public async Task<IEnumerable<dtoCard>> UpdateCardOwnerAsync(int userId, int cardId)
         {
-            throw new NotImplementedException();
+
+
+            var result = _context.Cards.SingleOrDefault(c => c.CardId == cardId);
+            if (result != null)
+            {
+                result.UserId = userId;
+                await _context.SaveChangesAsync();
+            }
+
+            var result2 = await _context.Cards
+               .Include(card => card.Poke)
+               .Include(card => card.User)
+               .Where(card => card.CardId == cardId)
+               .ToListAsync();
+
+            return result2.Select(card =>
+            {
+                return new dtoCard(card.CardId, card.UserId, card.User.UserName, card.PokeId, card.Poke.Pokemon, card.Trading);
+            });
+
         }
     }
 }

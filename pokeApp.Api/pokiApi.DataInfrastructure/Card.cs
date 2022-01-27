@@ -8,6 +8,8 @@ namespace pokiApi.DataInfrastructure
         public Card()
         {
             TradeDetails = new HashSet<TradeDetail>();
+            TradeRequestCards = new HashSet<TradeRequest>();
+            TradeRequestOfferCards = new HashSet<TradeRequest>();
         }
 
         public int CardId { get; set; }
@@ -18,5 +20,7 @@ namespace pokiApi.DataInfrastructure
         public virtual Dex Poke { get; set; } = null!;
         public virtual User User { get; set; } = null!;
         public virtual ICollection<TradeDetail> TradeDetails { get; set; }
+        public virtual ICollection<TradeRequest> TradeRequestCards { get; set; }
+        public virtual ICollection<TradeRequest> TradeRequestOfferCards { get; set; }
     }
 }

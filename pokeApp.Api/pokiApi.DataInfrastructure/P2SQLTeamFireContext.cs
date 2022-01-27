@@ -20,6 +20,7 @@ namespace pokiApi.DataInfrastructure
         public virtual DbSet<CompletedTrade> CompletedTrades { get; set; } = null!;
         public virtual DbSet<Dex> Dices { get; set; } = null!;
         public virtual DbSet<TradeDetail> TradeDetails { get; set; } = null!;
+        public virtual DbSet<TradeRequest> TradeRequests { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -116,6 +117,40 @@ namespace pokiApi.DataInfrastructure
                     .HasForeignKey(d => d.TradeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_trade_ID");
+            });
+
+            modelBuilder.Entity<TradeRequest>(entity =>
+            {
+                entity.HasKey(e => e.RequestId)
+                    .HasName("PK__TradeReq__E3C5DE51F217DB38");
+
+                entity.ToTable("TradeRequest", "poke");
+
+                entity.Property(e => e.RequestId).HasColumnName("requestID");
+
+                entity.Property(e => e.CardId).HasColumnName("cardID");
+
+                entity.Property(e => e.OfferCardId).HasColumnName("offerCardID");
+
+                entity.Property(e => e.UserId).HasColumnName("userID");
+
+                entity.HasOne(d => d.Card)
+                    .WithMany(p => p.TradeRequestCards)
+                    .HasForeignKey(d => d.CardId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("TR_FK_card_ID");
+
+                entity.HasOne(d => d.OfferCard)
+                    .WithMany(p => p.TradeRequestOfferCards)
+                    .HasForeignKey(d => d.OfferCardId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("TR_FK_offer_card_ID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.TradeRequests)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("TR_FK_user_ID");
             });
 
             modelBuilder.Entity<User>(entity =>
