@@ -482,6 +482,11 @@ namespace pokeApi.Data
         {
             throw new NotImplementedException();
         }
+        public Task<IEnumerable<dtoCard>> CheckCardOwner(int cardID)
+        {
+            throw new NotImplementedException();
+
+        }
     }
 
 

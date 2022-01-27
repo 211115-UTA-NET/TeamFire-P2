@@ -10,6 +10,7 @@ namespace pokeApi.Data
         Task<IEnumerable<dtoCard>> GetTradeCardsAsync();
         Task<IEnumerable<dtoCard>> GetNewRandCardAsync(int userId);
         Task<IEnumerable<dtoCard>> UpdateCardOwnerAsync(int userId, int cardId);
+        Task<IEnumerable<dtoCard>> CheckCardOwner(int cardID);
         Task<IEnumerable<dtoCard>> toggelTrading(int cardId); 
         Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(string name);
         Task<IEnumerable<dtoTradeRecord>> GetRecentTradesAsync(int tradeId);

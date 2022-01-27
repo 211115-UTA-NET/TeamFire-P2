@@ -28,6 +28,15 @@ namespace pokeApi.Controllers
             return new JsonResult(Cards);
         }
 
+        //================CHECK WHO OWNS THE CARD====//
+        [HttpGet("checkInfo")]
+        public async Task<IActionResult> CheckCardOwner(int cardID)
+        {
+            IEnumerable<dtoCard> cardInfo = await _repository.CheckCardOwner(cardID);
+            return new JsonResult(cardInfo);
+        }
+
+
         //============ GET CARDS BEING TRADED ===============//
         [HttpGet("trading")]
 
