@@ -396,7 +396,7 @@ namespace pokeApi.Data
         }
 
         //-------------ADD TRADE RECORD----------///
-        public async Task<IEnumerable<dtoTradeRecord>> AddNewRecordAsync(int offeredByID, int receivedByID)
+        public async Task<int> AddNewRecordAsync(int offeredByID, int receivedByID)
         {
             List<dtoTradeRecord> result = new List<dtoTradeRecord>();
             using SqlConnection connection = new(_connectionString);
@@ -421,7 +421,8 @@ namespace pokeApi.Data
                 Console.WriteLine($"Trade ID: {tradeID}");
             }
             await connection.CloseAsync();
-            return result;
+            //return result;
+            return 1;
         }
 
         //-------------ADD TRADE DETAIL----------//
@@ -453,6 +454,11 @@ namespace pokeApi.Data
             }
             await connection.CloseAsync();
             return result;
+        }
+
+        public async Task<IEnumerable<dtoCard>> toggelTrading(int cardId)
+        {
+            throw new NotImplementedException();
         }
 
     }
