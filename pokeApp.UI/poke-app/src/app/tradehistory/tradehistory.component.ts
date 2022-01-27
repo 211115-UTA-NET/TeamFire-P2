@@ -24,4 +24,6 @@ export class TradehistoryComponent implements OnInit {
   getTrades(): void {
     this.tradeService.getTrades().subscribe((trades) => (this.trades = trades));
   }
+
+  isShow: boolean = false;
 }

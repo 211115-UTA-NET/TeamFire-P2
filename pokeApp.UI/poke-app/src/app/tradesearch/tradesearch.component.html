@@ -1,19 +1,24 @@
 <body>
-  <div id="trade-search-componenent">
-    <h2>Search Pokemon Trades</h2>
 
-
-    <ul class="search-result">
-      <li *ngFor="let trade of trades$ | async ">
-        <a>{{trade.offeredBy}}</a>
-      </li>
-    </ul>
+  <div class="pgtitle">
+    <h1>Trade Search</h1>
   </div>
+
+
+
   <nav class="topnav">
     <a routerLink="/dashboard">Dashboard</a>
     <a routerLink="/tradehistory">Trade History</a>
   </nav>
-
-  <label for="search-box">Search for a Trade:</label>
+  <br />
+  <br />
+  <label for="search-box">Search for a user's trades:</label>
   <input #searchBox id="search-box" (input)="search(searchBox.value)" />
+  <div id="trade-search-componenent">
+    <ul class="gradient-list">
+      <li *ngFor="let trade of trades$ | async ">
+        {{trade.offeredBy}} traded a {{trade.pokemon}} to {{trade.redeemedBy}}
+      </li>
+    </ul>
+  </div>
 </body>

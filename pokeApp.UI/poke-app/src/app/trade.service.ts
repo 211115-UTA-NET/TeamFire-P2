@@ -72,7 +72,7 @@ export class TradeService {
     }
 
     return this.http
-      .get<TradeRecord[]>(`${this.tradeUrl}/GetByTradeId?tradeId=${term}`)
+      .get<TradeRecord[]>(`${this.tradeUrl}/GetByName?name=${term}`)
       .pipe(
         tap((x) =>
           x.length

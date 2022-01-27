@@ -61,3 +61,15 @@ mat-card-subtitle {
     box-shadow: 0 5px black;
     transform: translateY(4px);
   }
+ul li {
+  padding-left: 1em;
+  background-image: url(https://icon-library.com/images/small-pokeball-icon/small-pokeball-icon-5.jpg);
+  background-position: 0 0;
+  background-size: 1.6rem 1.6rem;
+  background-repeat: no-repeat;
+  margin-bottom: 1rem 0;
+}
+
+li + li {
+  margin-top: 10px;
+}
