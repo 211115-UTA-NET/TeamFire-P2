@@ -45,6 +45,7 @@ export class RequestComponent implements OnInit {
     this.GetSendRequest();
     this.GetReceivedRequest();
   }
+  badgenum: number | null = null;
   isShow: boolean = false;
   togglesend(): void {
     this.isShow = false;
@@ -67,6 +68,10 @@ export class RequestComponent implements OnInit {
       .GetReceivedRequest(this.dbUserInfo[0].userID)
       .subscribe((data) => {
         this.rcvRequests = data;
+        this.badgenum = this.badge();
+        if (this.badgenum == 0) {
+          this.badgenum = null;
+        }
         console.log(this.rcvRequests);
       });
   }
@@ -85,6 +90,8 @@ export class RequestComponent implements OnInit {
       alert(
         'The trade request has been rejected. This trade request no longer avaliable.'
       );
+    } else if (status == 'Expired') {
+      alert('This trade request is no longer avaliable...');
     } else {
       this.cardService.CheckCardOwner(offerCardID).subscribe((data) => {
         if (data[0].userID == this.dbUserInfo[0].userID) {
@@ -99,21 +106,27 @@ export class RequestComponent implements OnInit {
                   redeemCardID,
                   redeemUserID
                 );
-              } else if (status == 'Accepted') {
-                alert(
-                  'You already Accepted the trade. This trade request no longer avaliable.'
-                );
-              } else {
-                alert(
-                  'The trade request has been rejected. This trade request no longer avaliable.'
-                );
               }
             } else {
-              alert('This trade request is no longer avaliable...');
+              this.tradeService
+                .UpdataRequestStatus(requestID, 'Expired')
+                .subscribe((_) => {
+                  alert(
+                    'The redeemer are no longer the card owner. Trade request expired...'
+                  );
+                  location.reload();
+                });
             }
           });
         } else {
-          alert('This trade request is no longer avaliable...');
+          this.tradeService
+            .UpdataRequestStatus(requestID, 'Expired')
+            .subscribe((_) => {
+              alert(
+                'You are no longer the card owner. Trade request expired...'
+              );
+              location.reload();
+            });
         }
       });
     }
@@ -193,6 +206,8 @@ export class RequestComponent implements OnInit {
       alert('This trade request is no longer avaliable...');
     } else if (status == 'Rejected') {
       alert('You already rejected the trade request...');
+    } else if (status == 'Expired') {
+      alert('This trade request is expired...');
     } else {
       this.tradeService
         .UpdataRequestStatus(requestID, 'Rejected')
@@ -201,9 +216,13 @@ export class RequestComponent implements OnInit {
             alert('You successfully rejected the trade request!');
             location.reload();
           } else {
-            alert('You already rejected the trade request...');
+            alert('This trade request is no longer avaliable...');
           }
         });
     }
+  }
+
+  badge(): number {
+    return this.rcvRequests.filter((req) => req.status == 'pending').length;
   }
 }

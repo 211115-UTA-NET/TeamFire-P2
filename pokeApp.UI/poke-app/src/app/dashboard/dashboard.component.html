@@ -7,23 +7,18 @@
     </div>
     <nav class="topnav">
         <a (click)="toggle()">{{buttonName}}</a>
-        <a (click)="requestcomp()">Requests</a>
+        <a (click)="requestcomp()"> Requests </a>
         <a routerLink="/tradesearch">Trade Search</a>
         <a routerLink="/tradehistory">Trade History</a>
         <a (click)="logout()">Log out</a>
     </nav>
     <br>
+
     <!-- <label for="search-box">Search For Pokemon: </label>
     <input #searchBox id="search-box" /> -->
     <div class="trades" *ngIf="isShow!=null && isShow; else profile">
-        <!-- <ul class="items">
-            <li *ngFor="let trade of trades">
-                <a routerLink="/detail/{{trade.id}}">
-                    <span class="badge">{{hero.id}}</span> {{hero.name}}
-                </a>
-                <p>offeredBy: {{ trade.offeredBy }}, redeemedBy: {{ trade.redeemedBy }}</p>
-            </li>
-        </ul> -->
+        <h3 style="padding-left: 25px;">Hello, User #{{dbUserInfo[0].userID}}-{{dbUserInfo[0].userName}}<br>
+            Welcome to Pokemon Trading Bank!</h3>
         <mat-grid-list class="grid" cols="4" rowHeight="2:3">
             <mat-grid-tile *ngFor="let card of tradableCards">
                 <mat-card class="example-card">

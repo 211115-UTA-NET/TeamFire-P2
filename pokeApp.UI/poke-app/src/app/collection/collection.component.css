@@ -11,6 +11,8 @@
 }
 mat-grid-tile {
   color: black;
+  height: max-content;
+  width: max-content;
 }
 mat-card-subtitle {
   font-size: 16px;

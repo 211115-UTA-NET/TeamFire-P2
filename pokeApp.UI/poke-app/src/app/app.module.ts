@@ -21,6 +21,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
 import { RequestComponent } from './request/request.component';
 import { MatTableModule } from '@angular/material/table';
+import { MatBadgeModule } from '@angular/material/badge';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,6 +45,7 @@ import { MatTableModule } from '@angular/material/table';
     MatSelectModule,
     MatListModule,
     MatTableModule,
+    MatBadgeModule,
     AuthModule.forRoot({
       ...env.auth,
     }),
