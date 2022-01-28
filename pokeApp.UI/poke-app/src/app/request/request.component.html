@@ -1,6 +1,7 @@
 <body>
     <button class='switch-btn' (click)="togglesend()">Send</button>
-    <button class='switch-btn' (click)="togglercv()">Received</button>
+    <button class='switch-btn' (click)="togglercv()">Received<span matBadge="{{badgenum}}"
+            matBadgeOverlap="false"></span></button>
     <div class="request">
         <div *ngIf="isShow; else received">
             <h1>Received Request:</h1>

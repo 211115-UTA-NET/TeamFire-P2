@@ -5,7 +5,7 @@
                 <h1>Your collection is Empty</h1>
             </span>
         </div>
-        <mat-grid-list class="grid" cols="5" rowHeight="2:3">
+        <mat-grid-list class="grid" cols="4" rowHeight="2:3">
             <mat-grid-tile *ngFor="let card of userCards">
                 <mat-card class="example-card">
                     <img mat-card-image src="../../assets/images/{{card.pokeID}}.png" alt="Photo of {{card.pokemon}}">

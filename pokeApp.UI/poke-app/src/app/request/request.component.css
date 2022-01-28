@@ -30,7 +30,7 @@ table th {
   text-align: center;
 }
 th {
-  color: rgb(255, 255, 255);
+  color: #fff133;
 }
 .accept,
 .reject {
@@ -48,4 +48,10 @@ th {
 }
 .reject:active {
   background-color: rgb(255, 47, 47);
+}
+
+span .mat-badge-content {
+  margin-left: 3px;
+  color: rgb(255, 0, 0);
+  font-weight: bold;
 }

@@ -32,6 +32,7 @@ html {
   background-size: cover;
   position: relative;
   background-attachment: fixed;
+  font-family: cursive;
 }
 .pgtitle {
   margin-left: 36px;

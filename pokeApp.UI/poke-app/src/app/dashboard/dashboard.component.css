@@ -16,7 +16,11 @@ body {
 }
 mat-grid-tile {
   color: black;
+  height: max-content;
+  width: max-content;
+  overflow: auto;
 }
+
 mat-card-subtitle {
   font-size: 16px;
   color: rgb(105, 105, 105);
@@ -25,7 +29,7 @@ mat-card-subtitle {
 .example-card {
   width: 70%;
   height: max-content;
-  overflow: auto;
+  /* overflow: auto; */
   border-radius: 15px;
   background-color: #fff;
   text-align: center;
