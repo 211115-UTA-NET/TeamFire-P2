@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using pokeApi.Models;
+using System.Security.Cryptography;
 
 namespace pokeApi.Data
 {
@@ -169,13 +170,31 @@ namespace pokeApi.Data
             return result;
         }
 
+
+        
+        // Return a random integer between a min and max value.
+        private int RandomIntFromRNG(int min, int max)
+        {
+            RNGCryptoServiceProvider CprytoRNG = new RNGCryptoServiceProvider();
+            // Generate four random bytes
+            byte[] four_bytes = new byte[4];
+            CprytoRNG.GetBytes(four_bytes);
+
+            // Convert the bytes to a UInt32
+            UInt32 scale = BitConverter.ToUInt32(four_bytes, 0);
+
+            // And use that to pick a random number >= min and < max
+            return (int)(min + (max - min) * (scale / (uint.MaxValue + 1.0)));
+        }
+
         //-----------------GENERATE NEW CARD -------------------------//
         public async Task<IEnumerable<dtoCard>> GetNewRandCardAsync(int userId)
         {
             List<dtoCard> result = new List<dtoCard>();
             int trade = 0;
-            System.Random rand = new System.Random();
-            int pokeid = rand.Next(1, 810);
+
+
+            int pokeid = RandomIntFromRNG(1, 810);
             int thisID = 0;
             
             using SqlConnection connection = new(_connectionString);
@@ -212,9 +231,9 @@ namespace pokeApi.Data
             {
                 int cardID = (int)reader2["cardID"];
                 int userID = (int)reader2["userID"];
-                string userName = reader2["userName"].ToString();
+                string userName = reader2["userName"].ToString()!;
                 int pokeID = (int)reader2["pokeID"];
-                string pokemon = reader2["pokemon"].ToString();
+                string pokemon = reader2["pokemon"].ToString()!;
                 int trading = (int)reader2["trading"];
                 result.Add(new(cardID, userID, userName, pokeID, pokemon, trading));
                 Console.WriteLine($"Pokemon's Name: {pokemon}\nCardID: {cardID}.");

@@ -2,6 +2,7 @@
 using pokeApi.Models;
 using pokiApi.DataInfrastructure;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace pokeApi.Data
 {
@@ -120,13 +121,28 @@ namespace pokeApi.Data
             });
         }
 
+
+        // Return a random integer between a min and max value.
+        private int RandomIntFromRNG(int min, int max)
+        {
+            RNGCryptoServiceProvider CprytoRNG = new RNGCryptoServiceProvider();
+            // Generate four random bytes
+            byte[] four_bytes = new byte[4];
+            CprytoRNG.GetBytes(four_bytes);
+
+            // Convert the bytes to a UInt32
+            UInt32 scale = BitConverter.ToUInt32(four_bytes, 0);
+
+            // And use that to pick a random number >= min and < max
+            return (int)(min + (max - min) * (scale / (uint.MaxValue + 1.0)));
+        }
+
         //================assign random card to player======//
         // tried to return card with the highest cardID but could not do it
         public async Task<IEnumerable<dtoCard>> GetNewRandCardAsync(int userId)
         {
             //RandomNumberGenerator;
-            System.Random rand = new System.Random();
-            int pokeid = rand.Next(1, 810);
+            int pokeid = RandomIntFromRNG(1, 810);
             int thisID = 0;
             var card = new Card
             {
