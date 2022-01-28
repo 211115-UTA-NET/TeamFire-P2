@@ -22,4 +22,9 @@ describe('CollectionComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should return true when tradeable', () => {
+    expect(component.IsTradable(1)).toBe(true);
+    expect(component.IsTradable(0)).toBe(false);
+  });
 });

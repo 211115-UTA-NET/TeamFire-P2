@@ -22,4 +22,12 @@ describe('DashboardComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should change id and name with openModal', () => {
+
+    component.openModal(4, "jing");
+
+    expect(component.userName).toBe("jing");
+    expect(component.cardID).toBe(4);
+  })
 });
