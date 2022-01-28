@@ -1,12 +1,13 @@
 <body>
-    <div class="pgtitle" [hidden]="!isShow">
+    <div class="pgtitle" *ngIf="isShow || isShow==null">
         <h1>Trading Center</h1>
     </div>
-    <div class="pgtitle" [hidden]="isShow">
+    <div class="pgtitle" *ngIf="!isShow && isShow!=null">
         <h1>{{dbUserInfo[0].userName}}'s Profile</h1>
     </div>
     <nav class="topnav">
         <a (click)="toggle()">{{buttonName}}</a>
+        <a (click)="requestcomp()">Requests</a>
         <a routerLink="/tradesearch">Trade Search</a>
         <a routerLink="/tradehistory">Trade History</a>
         <a (click)="logout()">Log out</a>
@@ -14,7 +15,7 @@
     <br>
     <!-- <label for="search-box">Search For Pokemon: </label>
     <input #searchBox id="search-box" /> -->
-    <div class="trades" *ngIf="isShow; else profile">
+    <div class="trades" *ngIf="isShow!=null && isShow; else profile">
         <!-- <ul class="items">
             <li *ngFor="let trade of trades">
                 <a routerLink="/detail/{{trade.id}}">
@@ -27,11 +28,11 @@
             <mat-grid-tile *ngFor="let card of tradableCards">
                 <mat-card class="example-card">
                     <img mat-card-image src="../../assets/images/{{card.pokeID}}.png" alt="Photo of {{card.pokemon}}">
-                    <mat-card-title>#{{card.pokeID}} {{card.pokemon}}</mat-card-title>
+                    <mat-card-title>Card #{{card.cardID}} - #{{card.pokeID}} {{card.pokemon}}</mat-card-title>
                     <mat-card-subtitle>Owner: {{card.userName}}</mat-card-subtitle>
                     <mat-card-actions>
-                        <button mat-button class="button"
-                            (click)="openModal(card.cardID, card.userName)">Trade!</button>
+                        <button mat-button class="tradebutton" (click)="openModal(card.cardID, card.userName)"
+                            [disabled]="CheckTrade(card.cardID)">Trade!</button>
                     </mat-card-actions>
                 </mat-card>
                 <jw-modal id={{card.cardID}}>
@@ -43,15 +44,16 @@
 
                     <div class="miniwindow">
                         You want to offer
-                        <select class="select-list">
-                            <option class="select-opt" *ngFor="let mycard of userCards">
-                                #{{mycard.pokeID}} {{mycard.pokemon}}</option>
+                        <select class="select-list" (change)="getOptionCardID($event)">
+                            <option value="" disabled selected hidden>Choose from your collection</option>
+                            <option class="select-opt" *ngFor="let mycard of userCards" value={{mycard.cardID}}>
+                                Card #{{mycard.cardID}} - #{{mycard.pokeID}} {{mycard.pokemon}}</option>
                         </select>
                         to redeem
                         <span style="color: #8400ff; font-weight: bold;">
-                            #{{card.pokeID}} {{card.pokemon}}</span>?
+                            Card #{{card.cardID}} - #{{card.pokeID}} {{card.pokemon}}</span>?
                     </div>
-                    <button class="button">Send Request</button>
+                    <button class="send-button" (click)="SendRequest(card.cardID, card.userID)">Send Request</button>
                     <br><br>
                     <button class='close-btn' (click)="closeModal(card.cardID);">Close</button>
                 </jw-modal>
@@ -59,6 +61,11 @@
         </mat-grid-list>
     </div>
     <ng-template #profile>
-        <app-profile [dbUserInfo]=dbUserInfo [userCards]=userCards></app-profile>
+        <app-profile [dbUserInfo]=dbUserInfo [userCards]=userCards *ngIf="isShow!=null && !isShow; else request">
+        </app-profile>
+    </ng-template>
+
+    <ng-template #request>
+        <app-request [dbUserInfo]=dbUserInfo [userCards]=userCards></app-request>
     </ng-template>
 </body>

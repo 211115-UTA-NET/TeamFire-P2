@@ -18,6 +18,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { TradesearchComponent } from './tradesearch/tradesearch.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
+import { MatListModule } from '@angular/material/list';
+import { RequestComponent } from './request/request.component';
+import { MatTableModule } from '@angular/material/table';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,6 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
     CollectionComponent,
     TradehistoryComponent,
     TradesearchComponent,
+    RequestComponent,
   ],
   imports: [
     MatCardModule,
@@ -37,6 +41,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatGridListModule,
     MatSlideToggleModule,
     MatSelectModule,
+    MatListModule,
+    MatTableModule,
     AuthModule.forRoot({
       ...env.auth,
     }),

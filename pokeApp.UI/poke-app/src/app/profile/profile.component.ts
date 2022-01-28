@@ -15,11 +15,7 @@ import { Card } from '../Card';
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-  constructor(
-    private location: Location,
-    public auth: AuthService,
-    private userService: UserService
-  ) {}
+  constructor(private location: Location, public auth: AuthService) {}
 
   @Input() dbUserInfo: User[] = [];
   @Input() userCards: Card[] = [];
@@ -28,6 +24,7 @@ export class ProfileComponent implements OnInit {
     //   (profile) => (this.profileJson = JSON.stringify(profile, null, 2))
     // );
     // this.AddUser();
+    console.log(this.dbUserInfo);
   }
 
   // AddUser(): void {
