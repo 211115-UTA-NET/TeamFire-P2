@@ -393,7 +393,7 @@ namespace pokeApi.Data
                 {
                     requestid = tr.RequestId,
                     cardid = tr.CardId,
-                    userid = tr.UserId,
+                    userid = tr.TargetUserId,
                     offercardid = tr.OfferCardId,
                     pokeid = owner.PokeId,
                     pokemon = dex.Pokemon,
