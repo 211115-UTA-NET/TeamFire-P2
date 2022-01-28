@@ -11,6 +11,7 @@ namespace pokiApi.DataInfrastructure
         public int OfferCardId { get; set; }
         public string Status { get; set; } = null!;
         public DateTimeOffset Timestamp { get; set; }
+        public int TargetUserId { get; set; }
 
         public virtual Card Card { get; set; } = null!;
         public virtual Card OfferCard { get; set; } = null!;

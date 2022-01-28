@@ -71,7 +71,7 @@ namespace pokeApi.Controllers
         [ActionName("tradeRequest")]
         public async Task<int> AddTradeRequest([FromBody, FromQuery] dtoRequest request)
         {
-            int result = await _repository.AddTradeRequest(request.cardID, request.userID, request.offerCardID);
+            int result = await _repository.AddTradeRequest(request.cardID, request.userID, request.offerCardID, request.targetUserID);
             return result;
         }
 

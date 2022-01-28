@@ -136,6 +136,8 @@ namespace pokiApi.DataInfrastructure
                     .HasMaxLength(255)
                     .HasColumnName("status");
 
+                entity.Property(e => e.TargetUserId).HasColumnName("targetUserID");
+
                 entity.Property(e => e.Timestamp).HasDefaultValueSql("(sysdatetimeoffset())");
 
                 entity.Property(e => e.UserId).HasColumnName("userID");

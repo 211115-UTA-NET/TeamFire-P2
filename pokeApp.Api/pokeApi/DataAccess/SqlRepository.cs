@@ -463,7 +463,7 @@ namespace pokeApi.Data
             throw new NotImplementedException();
         }
 
-        public Task<int> AddTradeRequest(int cardID, int userID, int offerCardID)
+        public Task<int> AddTradeRequest(int cardID, int userID, int offerCardID, int targetuserid)
         {
             throw new NotImplementedException();
         }

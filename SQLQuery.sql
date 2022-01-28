@@ -77,6 +77,7 @@ ALTER TABLE poke.TradeRequest ADD CONSTRAINT TR_FK_offer_card_ID
 
 Alter table poke.TradeRequest ADD status NVARCHAR(255) NOT NULL;
 Alter table poke.TradeRequest ADD Timestamp DATETIMEOFFSET NOT NULL DEFAULT (SYSDATETIMEOFFSET())
+Alter table poke.TradeRequest ADD targetUserID INT NOT NULL
 
 select * from poke.Users;
 SELECT * FROM poke.Cards;
@@ -88,7 +89,10 @@ select * from poke.TradeDetail;
 select * from poke.Dex;
 
 
-delete from poke.TradeRequest where requestID =9
+delete from poke.TradeRequest where requestID =21
+delete from poke.TradeDetail where tradeID =31
+delete from poke.CompletedTrades where tradeID =31
+
 
 select * from poke.Cards where cardID=1 AND trading=1
 
@@ -98,7 +102,7 @@ from poke.TradeRequest as tr
 join poke.Cards as c on tr.offerCardID = c.cardID 
 join poke.Cards as owner on tr.cardID = owner.cardID
 join poke.Dex as dex on c.pokeID = dex.pokeID
-where owner.userID=4
+where tr.targetUserID=5
 
 -- user send the trade requests to card owner
 select requestID, tr.cardID, tr.userID, offerCardID, owner.pokeID, dex.pokemon, status, Timestamp

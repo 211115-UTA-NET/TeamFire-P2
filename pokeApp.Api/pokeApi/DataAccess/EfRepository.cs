@@ -322,18 +322,19 @@ namespace pokeApi.Data
         // ------------------- Trade Request ----------------------
 
         // return number of rows affected, if already there then return zero row affected
-        public async Task<int> AddTradeRequest(int cardID, int userID, int offerCardID)
+        public async Task<int> AddTradeRequest(int cardID, int userID, int offerCardID, int targetuserid)
         {
             int result = 0;
             if (!(await _context.TradeRequests.AnyAsync(tr => tr.CardId == cardID && tr.UserId == userID)) || 
-                (await _context.TradeRequests.AnyAsync(tr=> tr.CardId == cardID && tr.UserId == userID && tr.Status=="Rejected")) )
+                (await _context.TradeRequests.AnyAsync(tr=> tr.CardId == cardID && tr.UserId == userID && (tr.Status=="Rejected" || tr.Status!="pending"))))
             {
                 var request = new TradeRequest
                 {
                     CardId = cardID,
                     UserId = userID,
                     OfferCardId = offerCardID,
-                    Status = "pending"
+                    Status = "pending",
+                    TargetUserId=targetuserid
                 };
                 await _context.TradeRequests.AddAsync(request);
                 result = await _context.SaveChangesAsync();
@@ -401,7 +402,7 @@ namespace pokeApi.Data
                join c in _context.Cards on tr.OfferCardId equals c.CardId
                join owner in _context.Cards on tr.CardId equals owner.CardId
                join dex in _context.Dices on c.PokeId equals dex.PokeId
-               where owner.UserId == userid
+               where tr.TargetUserId == userid
                select new
                {
                    requestid = tr.RequestId,

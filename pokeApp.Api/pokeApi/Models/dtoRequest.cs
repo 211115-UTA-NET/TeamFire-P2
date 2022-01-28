@@ -10,6 +10,8 @@ namespace pokeApi.Models
         public int userID { get; set; }
         [Required]
         public int offerCardID { get; set; }
+        [Required]
+        public int targetUserID { get; set; }
     }
 }
 
