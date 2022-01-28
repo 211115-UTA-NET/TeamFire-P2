@@ -5,6 +5,8 @@ import { lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { TradeRecord } from './TradeRecord';
 import { MessageService } from './message.service';
+import { Requests } from './Requests';
+import { Card } from './Card';
 
 @Injectable({
   providedIn: 'root',
@@ -85,5 +87,77 @@ export class TradeService {
 
   private log(message: string) {
     this.messageService.add(`tradeService: ${message}`);
+  }
+
+  // ----------- Check is Card still tradable in trading center ---------
+  public CheckTradable(cardid: number) {
+    return this.http.get<boolean>(
+      `${this.tradeUrl}/isTradable?cardId=${cardid}`
+    );
+  }
+
+  public SendTradeRequest(
+    cardid: number,
+    userid: number,
+    offercardid: number,
+    targetUserID: number
+  ) {
+    let body = {
+      cardID: cardid,
+      userID: userid,
+      offerCardID: offercardid,
+      targetUserID: targetUserID,
+    };
+    var url = this.tradeUrl + '/tradeRequest';
+    return this.http.post<number>(url, body, this.httpOptions);
+  }
+
+  public GetSendRequest(userid: number) {
+    return this.http.get<Requests[]>(
+      `${this.tradeUrl}/sendrequest?userid=${userid}`
+    );
+  }
+
+  public GetReceivedRequest(userid: number) {
+    return this.http.get<Requests[]>(
+      `${this.tradeUrl}/receivedrequest?userid=${userid}`
+    );
+  }
+
+  public UpdataRequestStatus(requestid: number, status: string) {
+    let body = {
+      requestID: requestid,
+      requestStatus: status,
+    };
+    return this.http.put<number>(
+      `${this.tradeUrl}/UpdateStatus`,
+      body,
+      this.httpOptions
+    );
+  }
+
+  public AddCompletedTrade(offerbyid: number, redeembyid: number) {
+    let body = {
+      offeredByID: offerbyid,
+      recevedByID: redeembyid,
+    };
+    return this.http.post<number>(
+      `${this.tradeUrl}/AddCompletedTrade`,
+      body,
+      this.httpOptions
+    );
+  }
+
+  public AddTradeDetail(tradeid: number, cardid: number, offerbyid: number) {
+    let body = {
+      tradeId: tradeid,
+      cardId: cardid,
+      offeredId: offerbyid,
+    };
+    return this.http.post<TradeRecord[]>(
+      `${this.tradeUrl}/AddTradeDetail`,
+      body,
+      this.httpOptions
+    );
   }
 }

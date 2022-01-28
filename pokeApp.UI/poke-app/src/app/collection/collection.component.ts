@@ -38,4 +38,17 @@ export class CollectionComponent implements OnInit {
     if (trading == 1) return true;
     else return false;
   }
+
+  tradableToggle(cardid: number) {
+    return this.cardService.TradableToggle(cardid).subscribe((data) => {
+      console.log(data);
+      if (data[0].trading == 1) {
+        alert('Tradable On');
+        location.reload();
+      } else {
+        alert('Tradable off');
+        location.reload();
+      }
+    });
+  }
 }

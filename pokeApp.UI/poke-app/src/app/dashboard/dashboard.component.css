@@ -41,7 +41,8 @@ mat-card-subtitle {
   background-size: cover;
 }
 
-.button {
+.send-button,
+.tradebutton {
   display: inline-block;
   padding: 10px 25px;
   font-size: 24px;
@@ -56,15 +57,33 @@ mat-card-subtitle {
   box-shadow: 0 9px black;
 }
 
+.tradebutton:disabled,
+.tradebutton:disabled:hover {
+  display: inline-block;
+  padding: 10px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #7c7c7c;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px black;
+}
+
 mat-card-actions {
   padding: 0;
 }
 
-.button:hover {
+.send-button:hover,
+.tradebutton:hover {
   background-color: #8400ff;
 }
 
-.button:active {
+.send-button:active,
+.tradebutton:active {
   background-color: #8400ff;
   box-shadow: 0 5px black;
   transform: translateY(4px);

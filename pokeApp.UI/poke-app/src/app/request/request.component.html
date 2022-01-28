@@ -1,0 +1,102 @@
+<body>
+    <button class='switch-btn' (click)="togglesend()">Send</button>
+    <button class='switch-btn' (click)="togglercv()">Received</button>
+    <div class="request">
+        <div *ngIf="isShow; else received">
+            <h1>Received Request:</h1>
+            <table mat-table [dataSource]="rcvRequests">
+                <ng-container matColumnDef="requestID">
+                    <th mat-header-cell *matHeaderCellDef> No. </th>
+                    <td mat-cell *matCellDef="let request"> {{request.requestID}} </td>
+                </ng-container>
+                <ng-container matColumnDef="userID">
+                    <th mat-header-cell *matHeaderCellDef> Request From </th>
+                    <td mat-cell *matCellDef="let request"> User #{{request.userID}} </td>
+                </ng-container>
+                <ng-container matColumnDef="offerCardID">
+                    <th mat-header-cell *matHeaderCellDef> Offer Card ID </th>
+                    <td mat-cell *matCellDef="let request"> {{request.cardID}} </td>
+                </ng-container>
+                <ng-container matColumnDef="cardID">
+                    <th mat-header-cell *matHeaderCellDef> Redeem Card ID </th>
+                    <td mat-cell *matCellDef="let request"> {{request.offerCardID}} </td>
+                </ng-container>
+                <ng-container matColumnDef="pokeID">
+                    <th mat-header-cell *matHeaderCellDef> Redeem Pokemon ID </th>
+                    <td mat-cell *matCellDef="let request"> {{request.pokeID}} </td>
+                </ng-container>
+                <ng-container matColumnDef="pokemon">
+                    <th mat-header-cell *matHeaderCellDef> Pokemon Name </th>
+                    <td mat-cell *matCellDef="let request"> {{request.pokemon}} </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="Timestamp">
+                    <th mat-header-cell *matHeaderCellDef> Date </th>
+                    <td mat-cell *matCellDef="let request"> {{request.Timestamp}} </td>
+                </ng-container> -->
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                    <td mat-cell *matCellDef="let request"> {{request.status}} </td>
+                </ng-container>
+                <ng-container matColumnDef="manageReq">
+                    <th mat-header-cell *matHeaderCellDef> Manage Request </th>
+                    <td mat-cell *matCellDef="let request">
+                        <button class="accept"
+                            (click)="AcceptRequest(request.requestID, request.status, request.userID, request.offerCardID, request.cardID)">
+                            Accept
+                        </button> |
+                        <button class="reject"
+                            (click)="RejectRequest(request.requestID, request.status)">Reject</button>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+            </table>
+            <span style="text-align: center;">
+                <h1 *ngIf="rcvRequests.length==0"> Your request is empty</h1>
+            </span>
+        </div>
+
+        <ng-template #received>
+            <h1>Send Request:</h1>
+            <table mat-table [dataSource]="sendRequests">
+                <ng-container matColumnDef="requestID">
+                    <th mat-header-cell *matHeaderCellDef> No. </th>
+                    <td mat-cell *matCellDef="let request"> {{request.requestID}} </td>
+                </ng-container>
+                <ng-container matColumnDef="userID">
+                    <th mat-header-cell *matHeaderCellDef> Send by </th>
+                    <td mat-cell *matCellDef="let request"> Yourself </td>
+                </ng-container>
+                <ng-container matColumnDef="offerCardID">
+                    <th mat-header-cell *matHeaderCellDef> Offer Card ID </th>
+                    <td mat-cell *matCellDef="let request"> {{request.offerCardID}} </td>
+                </ng-container>
+                <ng-container matColumnDef="cardID">
+                    <th mat-header-cell *matHeaderCellDef> Redeem Card ID </th>
+                    <td mat-cell *matCellDef="let request"> {{request.cardID}} </td>
+                </ng-container>
+                <ng-container matColumnDef="pokeID">
+                    <th mat-header-cell *matHeaderCellDef> Redeem Pokemon ID </th>
+                    <td mat-cell *matCellDef="let request"> {{request.pokeID}} </td>
+                </ng-container>
+                <ng-container matColumnDef="pokemon">
+                    <th mat-header-cell *matHeaderCellDef> Pokemon Name </th>
+                    <td mat-cell *matCellDef="let request"> {{request.pokemon}} </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="Timestamp">
+                    <th mat-header-cell *matHeaderCellDef> Date </th>
+                    <td mat-cell *matCellDef="let request"> {{request.Timestamp}} </td>
+                </ng-container> -->
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                    <td mat-cell *matCellDef="let request"> {{request.status}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="columnsToDisplaySend"></tr>
+                <tr mat-row *matRowDef="let row; columns: columnsToDisplaySend;"></tr>
+            </table>
+            <span style="text-align: center;">
+                <h1 *ngIf="sendRequests.length==0"> Your request is empty</h1>
+            </span>
+        </ng-template>
+    </div>
+</body>
