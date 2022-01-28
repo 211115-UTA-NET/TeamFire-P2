@@ -261,7 +261,7 @@ namespace pokeApi.Data
 
             return ppls.Select(ppl =>
             {
-                return new dtoUser(ppl.UserId, ppl.UserName, "pw", "email");
+                return new dtoUser(ppl.UserId, ppl.UserName, ppl.Password, ppl.Email);
             });
         }
 
