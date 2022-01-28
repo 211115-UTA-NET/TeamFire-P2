@@ -95,7 +95,7 @@ namespace pokeApi.Controllers
         [ActionName("UpdateStatus")]
         public async Task<IActionResult> UpdateTradeStatus([FromBody, Required] dtoRequestUpdate status)
         {
-            int result = await _repository.UpdateTradeStatus(status.RequestID , status.RequestStatus);
+            int result = await _repository.UpdateTradeStatus(status.RequestID , status.RequestStatus!);
             return new JsonResult(result);
         }
 

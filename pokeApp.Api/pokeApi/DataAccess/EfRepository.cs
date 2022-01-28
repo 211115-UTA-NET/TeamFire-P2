@@ -325,7 +325,8 @@ namespace pokeApi.Data
         public async Task<int> AddTradeRequest(int cardID, int userID, int offerCardID)
         {
             int result = 0;
-            if (!(await _context.TradeRequests.AnyAsync(tr => tr.CardId == cardID && tr.UserId == userID)))
+            if (!(await _context.TradeRequests.AnyAsync(tr => tr.CardId == cardID && tr.UserId == userID)) || 
+                (await _context.TradeRequests.AnyAsync(tr=> tr.CardId == cardID && tr.UserId == userID && tr.Status=="Rejected")) )
             {
                 var request = new TradeRequest
                 {
