@@ -6,6 +6,7 @@
       <a (click)="toggle()">{{buttonName}}</a>
     </nav> -->
     <button class='switch-btn' (click)="toggle()">{{buttonName}}</button>
+    <button class='switch-btn' (click)="GetNewCard()" *ngIf="buttonName=='Profile'">Click to draw a card</button>
     <div class="pgtitle" [hidden]="isShow">
       <h1>My Pokemon Collection</h1>
     </div>
