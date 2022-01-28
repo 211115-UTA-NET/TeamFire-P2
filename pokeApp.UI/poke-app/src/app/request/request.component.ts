@@ -89,22 +89,29 @@ export class RequestComponent implements OnInit {
       this.cardService.CheckCardOwner(offerCardID).subscribe((data) => {
         if (data[0].userID == this.dbUserInfo[0].userID) {
           console.log("I'm the card owner");
-          if (status == 'pending') {
-            this.UpdateRequest(
-              requestID,
-              offerCardID,
-              redeemCardID,
-              redeemUserID
-            );
-          } else if (status == 'Accepted') {
-            alert(
-              'You already Accepted the trade. This trade request no longer avaliable.'
-            );
-          } else {
-            alert(
-              'The trade request has been rejected. This trade request no longer avaliable.'
-            );
-          }
+          this.cardService.CheckCardOwner(redeemCardID).subscribe((data) => {
+            // redeemer is the redeem card owner
+            if (data[0].userID == redeemUserID) {
+              if (status == 'pending') {
+                this.UpdateRequest(
+                  requestID,
+                  offerCardID,
+                  redeemCardID,
+                  redeemUserID
+                );
+              } else if (status == 'Accepted') {
+                alert(
+                  'You already Accepted the trade. This trade request no longer avaliable.'
+                );
+              } else {
+                alert(
+                  'The trade request has been rejected. This trade request no longer avaliable.'
+                );
+              }
+            } else {
+              alert('This trade request is no longer avaliable...');
+            }
+          });
         } else {
           alert('This trade request is no longer avaliable...');
         }

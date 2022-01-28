@@ -64,8 +64,8 @@
                     <td mat-cell *matCellDef="let request"> {{request.requestID}} </td>
                 </ng-container>
                 <ng-container matColumnDef="userID">
-                    <th mat-header-cell *matHeaderCellDef> Send by </th>
-                    <td mat-cell *matCellDef="let request"> Yourself </td>
+                    <th mat-header-cell *matHeaderCellDef> Send to </th>
+                    <td mat-cell *matCellDef="let request"> User #{{request.userID}} </td>
                 </ng-container>
                 <ng-container matColumnDef="offerCardID">
                     <th mat-header-cell *matHeaderCellDef> Offer Card ID </th>
