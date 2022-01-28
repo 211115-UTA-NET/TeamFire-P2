@@ -407,7 +407,7 @@ namespace pokeApi.Data
                    cardid = tr.CardId,
                    userid = tr.UserId,
                    offercardid = tr.OfferCardId,
-                   pokeid = owner.PokeId,
+                   pokeid = c.PokeId,
                    pokemon = dex.Pokemon,
                    status = tr.Status,
                    date = tr.Timestamp
