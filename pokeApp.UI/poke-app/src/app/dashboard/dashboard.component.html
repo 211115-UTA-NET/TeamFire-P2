@@ -17,8 +17,10 @@
     <!-- <label for="search-box">Search For Pokemon: </label>
     <input #searchBox id="search-box" /> -->
     <div class="trades" *ngIf="isShow!=null && isShow; else profile">
-        <h3 style="padding-left: 25px;">Hello, User #{{dbUserInfo[0].userID}}-{{dbUserInfo[0].userName}}<br>
-            Welcome to Pokemon Trading Bank!</h3>
+        <div style="padding-left: 25px;" *ngIf="dbUserInfo.length==1">
+            <h3>Hello, User #{{dbUserInfo[0].userID}}-{{dbUserInfo[0].userName}}</h3>
+            <h3>Welcome to Pokemon Trading Bank!</h3>
+        </div>
         <mat-grid-list class="grid" cols="4" rowHeight="2:3">
             <mat-grid-tile *ngFor="let card of tradableCards">
                 <mat-card class="example-card">
@@ -48,7 +50,8 @@
                         <span style="color: #8400ff; font-weight: bold;">
                             Card #{{card.cardID}} - #{{card.pokeID}} {{card.pokemon}}</span>?
                     </div>
-                    <button class="send-button" (click)="SendRequest(card.cardID, card.userID)">Send Request</button>
+                    <button class="send-button" (click)="SendRequest(card.cardID, card.userID)">Send
+                        Request</button>
                     <br><br>
                     <button class='close-btn' (click)="closeModal(card.cardID);">Close</button>
                 </jw-modal>
