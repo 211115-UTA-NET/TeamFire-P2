@@ -5,6 +5,7 @@ import { User } from '../User';
 import { UserService } from '../user.service';
 import { UserDto } from '../UserDto';
 import { Card } from '../Card';
+import { CardService } from '../card.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,11 @@ import { Card } from '../Card';
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-  constructor(private location: Location, public auth: AuthService) {}
+  constructor(
+    private location: Location,
+    public auth: AuthService,
+    public cardService: CardService
+  ) {}
 
   @Input() dbUserInfo: User[] = [];
   @Input() userCards: Card[] = [];
@@ -53,5 +58,21 @@ export class ProfileComponent implements OnInit {
     this.isShow = !this.isShow;
     if (!this.isShow) this.buttonName = 'Profile';
     else this.buttonName = 'My Pokemon Collection';
+  }
+
+  GetNewCard() {
+    this.cardService.DrawCard(this.dbUserInfo[0].userID).subscribe((data) => {
+      var newCard = data[data.length - 1];
+      alert(
+        'Congratulations!\nYou got Card #' +
+          newCard.cardID +
+          ' - [#' +
+          newCard.pokeID +
+          ' ' +
+          newCard.pokemon +
+          ']'
+      );
+      location.reload();
+    });
   }
 }

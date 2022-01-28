@@ -43,10 +43,10 @@ export class CollectionComponent implements OnInit {
     return this.cardService.TradableToggle(cardid).subscribe((data) => {
       console.log(data);
       if (data[0].trading == 1) {
-        alert('Tradable On');
+        alert('Trading On');
         location.reload();
       } else {
-        alert('Tradable off');
+        alert('Trading off');
         location.reload();
       }
     });

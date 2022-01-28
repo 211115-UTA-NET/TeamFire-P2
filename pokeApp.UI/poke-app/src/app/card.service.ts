@@ -53,4 +53,15 @@ export class CardService {
       this.httpOptions
     );
   }
+
+  public DrawCard(userid: number) {
+    let body = {
+      userId: userid,
+    };
+    return this.http.post<Card[]>(
+      `${this.cardUrl}/NewCard`,
+      body,
+      this.httpOptions
+    );
+  }
 }
